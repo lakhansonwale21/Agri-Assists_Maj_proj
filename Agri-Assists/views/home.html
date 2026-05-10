@@ -98,7 +98,7 @@
                             data-i18n="empowering_farmers_g_1e78b">Empowering Farmers Globally</span></span>
                     <h1 class="display-3 fw-bolder mb-4 text-white text-shadow lh-sm"><span
                             data-i18n="smart_agriculture_42a06">Smart Agriculture</span><br><span
-                            class="text-accent"><span data-i18n="made_simple_8ec94">Made Simple</span></span></h1>
+                            class="text-accent"><span data-i18n="made_simple_8ec94">Assistant</span></span></h1>
                     <p class="lead mb-5 text-light fw-light fs-4 text-shadow-sm pe-lg-5" data-i18n="hero_subtitle">
                         Access real-time weather, accurate crop market prices, quality supplies, and direct expert
                         support—all in one place.</p>
@@ -245,14 +245,14 @@
 
                                     <!-- City Search Bar -->
                                     <div class="d-flex align-items-center mb-3 px-2" style="gap:8px;">
-                                        <div class="input-group" style="background:rgba(255,255,255,0.15); border-radius:50px; overflow:hidden;">
+                                        <div class="input-group"
+                                            style="background:rgba(255,255,255,0.15); border-radius:50px; overflow:hidden;">
                                             <span class="input-group-text border-0 bg-transparent text-white ps-3">
                                                 <i class="fas fa-search opacity-75"></i>
                                             </span>
                                             <input type="text" id="weatherCitySearch"
                                                 class="form-control border-0 bg-transparent text-white shadow-none py-2"
-                                                placeholder="Search city..."
-                                                style="color:white !important;"
+                                                placeholder="Search city..." style="color:white !important;"
                                                 onkeydown="if(event.key==='Enter') searchWeatherCity()">
                                             <button class="btn border-0 text-white fw-bold px-3"
                                                 style="background:rgba(255,255,255,0.2); border-radius:0 50px 50px 0;"
@@ -464,7 +464,8 @@
                                 <div class="ms-4">
                                     <h6 class="fw-bold text-white mb-1"><span
                                             data-i18n="headquarters">Headquarters</span></h6>
-                                    <p class="text-white-50 mb-0" id="adminSettingAddress">Agri-Assists Tower, Pune, Maharashtra 411001</p>
+                                    <p class="text-white-50 mb-0" id="adminSettingAddress">Agri-Assists Tower, Pune,
+                                        Maharashtra 411001</p>
                                 </div>
                             </div>
 
@@ -476,7 +477,8 @@
                                 <div class="ms-4">
                                     <h6 class="fw-bold text-white mb-1"><span data-i18n="email_support">Email
                                             Support</span></h6>
-                                    <p class="text-white-50 mb-0"><a href="mailto:admin@agri-assists.com" id="adminSettingEmail"
+                                    <p class="text-white-50 mb-0"><a href="mailto:admin@agri-assists.com"
+                                            id="adminSettingEmail"
                                             class="text-white text-decoration-none">admin@agri-assists.com</a></p>
                                 </div>
                             </div>
@@ -505,26 +507,30 @@
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold text-dark"><span data-i18n="full_name">Full
                                             Name</span></label>
-                                    <input type="text" id="contactName" class="form-control py-2 bg-light border-light shadow-none"
-                                        required placeholder="Enter Name">
+                                    <input type="text" id="contactName"
+                                        class="form-control py-2 bg-light border-light shadow-none" required
+                                        placeholder="Enter Name">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold text-dark"><span data-i18n="email_addr">Email
                                             Address</span></label>
-                                    <input type="email" id="contactEmail" class="form-control py-2 bg-light border-light shadow-none"
-                                        required placeholder="Enter E-m@il">
+                                    <input type="email" id="contactEmail"
+                                        class="form-control py-2 bg-light border-light shadow-none" required
+                                        placeholder="Enter E-m@il">
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-semibold text-dark"><span
                                         data-i18n="subject">Subject</span></label>
-                                <input type="text" id="contactSubject" class="form-control py-2 bg-light border-light shadow-none" required
+                                <input type="text" id="contactSubject"
+                                    class="form-control py-2 bg-light border-light shadow-none" required
                                     placeholder="How can we help?">
                             </div>
                             <div class="mb-4">
                                 <label class="form-label fw-semibold text-dark"><span data-i18n="message">Your
                                         Message</span></label>
-                                <textarea id="contactMessageInput" class="form-control py-2 bg-light border-light shadow-none" rows="4" required
+                                <textarea id="contactMessageInput"
+                                    class="form-control py-2 bg-light border-light shadow-none" rows="4" required
                                     placeholder="Write your message here..."></textarea>
                             </div>
                             <button type="submit" id="contactSubmitBtn"
@@ -698,29 +704,29 @@
                     tableBody.innerHTML = `<tr><td colspan=\"3\" class=\"text-center py-5 text-danger\">${translations['js_err_prices'] || 'Failed to fetch market rates.'}</td></tr>`;
                 }
             }
-            
+
             // Fetch public settings for Admin contact info
             try {
                 const settingsRes = await fetch('/api/public-settings');
                 const data = await settingsRes.json();
                 if (data && data.success && data.settings) {
                     const s = data.settings;
-                    
+
                     const elAddress = document.getElementById('adminSettingAddress');
                     const elEmail = document.getElementById('adminSettingEmail');
                     const elPhone = document.getElementById('adminSettingPhone');
-                    
-                    if(elAddress && s.address) elAddress.innerText = s.address;
-                    if(elEmail && s.contactEmail) {
+
+                    if (elAddress && s.address) elAddress.innerText = s.address;
+                    if (elEmail && s.contactEmail) {
                         elEmail.innerText = s.contactEmail;
                         elEmail.href = `mailto:${s.contactEmail}`;
                     }
-                    if(elPhone && s.contactPhone) {
+                    if (elPhone && s.contactPhone) {
                         elPhone.innerText = s.contactPhone;
                         elPhone.href = `tel:${s.contactPhone.replace(/\s/g, '')}`;
                     }
                 }
-            } catch(e) {
+            } catch (e) {
                 console.error("Error fetching admin settings:", e);
             }
         });
@@ -745,7 +751,7 @@
                     body: JSON.stringify(payload)
                 });
                 const data = await res.json();
-                if(data.success) {
+                if (data.success) {
                     alert('Message sent successfully! Our admin will contact you soon.');
                     document.getElementById('contactForm').reset();
                 } else {
