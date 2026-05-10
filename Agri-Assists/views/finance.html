@@ -1,0 +1,475 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance &amp; Expenses - Agri-Assists</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .sidebar {
+            background-color: #fff;
+            min-height: calc(100vh - 66px);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .sidebar .nav-link {
+            color: var(--text-dark) !important;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: var(--light-green);
+            color: var(--primary-green) !important;
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link.active {
+            background-color: var(--primary-green);
+            color: white !important;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+        
+        .transaction-badge {
+            width: 80px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100" style="background: linear-gradient(rgba(244, 252, 245, 0.4), rgba(244, 252, 245, 0.6)), url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&amp;w=2000&amp;auto=format&amp;fit=crop') center/cover fixed;">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary-green sticky-top shadow-sm py-2 bg-opacity-75" style="backdrop-filter: blur(10px);">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold fs-4 d-flex align-items-center" href="/">
+                <i class="fas fa-leaf text-accent me-2"></i> <span data-i18n="agriassists_eab25">Agri-Assists</span>
+            </a>
+            <div class="d-flex align-items-center">
+                <a href="/profile" class="text-decoration-none">
+                    <div class="bg-glass px-3 py-1 rounded-pill me-3 d-flex align-items-center border border-light border-opacity-25" style="transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fas fa-user-circle text-white me-2 fs-5"></i>
+                        <span id="navUserName" class="text-white fw-semibold"></span>
+                    </div>
+                </a>
+                <button type="button" class="btn btn-outline-light rounded-pill px-3 fw-bold btn-sm shadow-sm" id="dashLogoutBtn"><span data-i18n="logout_0323d">Logout</span> <i class="fas fa-sign-out-alt ms-1"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid flex-grow-1">
+        <div class="row h-100">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 p-3 sidebar d-none d-md-block shadow-sm z-index-1 position-sticky" style="top: 66px;">
+                <h6 class="text-muted text-uppercase fw-bold mb-3 px-3 fs-7"><span><span data-i18n="menu_b6154">Menu</span></span></h6>
+                <ul class="nav flex-column mb-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard"><i class="fas fa-chart-pie me-2 w-20px text-center"></i> <span><span data-i18n="dashboard_2938c">Dashboard</span></span></a>
+                    </li>
+                    <li class="nav-item farmer-only" style="display:none;">
+                        <a class="nav-link" href="/market"><i class="fas fa-chart-line me-2 w-20px text-center"></i> <span><span data-i18n="market_prices_65f02">Market Prices</span></span></a>
+                    </li>
+                    <li class="nav-item farmer-only" style="display:none;">
+                        <a class="nav-link" href="/shops"><i class="fas fa-store me-2 w-20px text-center"></i> <span><span data-i18n="nearby_shops_7fe3e">Nearby Shops</span></span></a>
+                    </li>
+                    <li class="nav-item shopkeeper-only" style="display:none;">
+                        <a class="nav-link" href="/products"><i class="fas fa-box-open me-2 w-20px text-center"></i> <span><span data-i18n="products_068f8">Products</span></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/requests"><i class="fas fa-clipboard-list me-2 w-20px text-center"></i> <span><span data-i18n="requests_b134a">Requests</span></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/finance"><i class="fas fa-wallet me-2 w-20px text-center"></i> <span><span data-i18n="finance__expenses_b797e">Finance &amp; Expenses</span></span></a>
+                    </li>
+                    <li class="nav-item mt-4">
+                        <h6 class="text-muted text-uppercase fw-bold mb-3 px-3 fs-7"><span><span data-i18n="settings_f4f70">Settings</span></span></h6>
+                        <a class="nav-link" href="/profile"><i class="fas fa-user-cog me-2 w-20px text-center text-secondary"></i> <span><span data-i18n="my_profile_e8956">My Profile</span></span></a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 p-4 p-md-5" style="background-color: rgba(244, 252, 245, 0.3);">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                    <h2 class="fw-bolder fs-2 mb-0"><span data-i18n="finance__expenses_b797e">Finance &amp; Expenses</span></h2>
+                    <div>
+                        <button class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm me-2" onclick="openRecordModal('expense')">
+                            <i class="fas fa-minus-circle me-2"></i> <span data-i18n="add_expense_new">Add Expense</span>
+                        </button>
+                        <button class="btn btn-success rounded-pill px-4 fw-bold shadow-sm" onclick="openRecordModal('revenue')">
+                            <i class="fas fa-plus-circle me-2"></i> <span data-i18n="add_revenue_new">Add Revenue</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm rounded-4 pe-none position-relative overflow-hidden animate-fade-in-up stagger-1 hover-lift" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">
+                            <i class="fas fa-arrow-down fa-5x position-absolute opacity-10" style="right: -10px; bottom: -10px; color: white;"></i>
+                            <div class="card-body p-4 text-white">
+                                <h6 class="text-uppercase fw-bold mb-2 text-white-50"><span data-i18n="total_expenses_10f0a">Total Expenses</span></h6>
+                                <h2 class="display-5 fw-bolder mb-0">₹<span id="summaryExpense">0</span></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm rounded-4 pe-none position-relative overflow-hidden animate-fade-in-up stagger-2 hover-lift" style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green));">
+                            <i class="fas fa-arrow-up fa-5x position-absolute opacity-10" style="right: -10px; bottom: -10px; color: white;"></i>
+                            <div class="card-body p-4 text-white">
+                                <h6 class="text-uppercase fw-bold mb-2 text-white-50"><span data-i18n="total_revenue_5d450">Total Revenue</span></h6>
+                                <h2 class="display-5 fw-bolder mb-0">₹<span id="summaryRevenue">0</span></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm rounded-4 pe-none position-relative overflow-hidden animate-fade-in-up stagger-3 hover-lift" id="profitCard" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+                            <i class="fas fa-wallet fa-5x position-absolute opacity-10" style="right: -10px; bottom: -10px; color: white;"></i>
+                            <div class="card-body p-4 text-white">
+                                <h6 class="text-uppercase fw-bold mb-2 text-white-50"><span data-i18n="net_profit__loss_c9621">Net Profit / Loss</span></h6>
+                                <h2 class="display-5 fw-bolder mb-0">₹<span id="summaryProfit">0</span></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crop Breakdown Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h4 class="fw-bold mb-3"><i class="fas fa-seedling text-success me-2"></i> <span data-i18n="crop_breakdown_new">Crop-wise Breakdown</span></h4>
+                        <div class="row g-3" id="cropBreakdownContainer">
+                            <div class="col-12 text-center text-muted py-3">
+                                <span class="spinner-border text-success spinner-border-sm me-2"></span> <span data-i18n="loading_records_1d485">Loading records...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-5">
+                    <!-- Chart -->
+                    <div class="col-lg-7">
+                        <div class="card border-0 shadow-sm h-100 rounded-4 animate-fade-in-up stagger-4 hover-lift">
+                            <div class="card-header bg-white border-0 pt-4 pb-2 px-4">
+                                <h5 class="fw-bold mb-0 text-dark"><i class="fas fa-chart-bar text-primary-custom me-2"></i> <span data-i18n="financial_breakdown__754fc">Financial Breakdown by Crop/Product</span></h5>
+                            </div>
+                            <div class="card-body px-4 pb-4">
+                                <canvas id="financeChart" style="max-height: 300px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Recent Records -->
+                    <div class="col-lg-5">
+                        <div class="card border-0 shadow-sm h-100 rounded-4 mb-5 animate-fade-in-up stagger-5 hover-lift">
+                            <div class="card-header bg-white pt-4 pb-3 px-4 border-bottom border-light">
+                                <h5 class="fw-bold mb-0 text-dark"><i class="fas fa-history text-secondary me-2"></i> <span data-i18n="recent_transactions_88856">Recent Transactions</span></h5>
+                            </div>
+                            <div class="card-body p-0" style="max-height: 340px; overflow-y: auto;">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0 fs-6">
+                                        <tbody id="recordsTable">
+                                            <tr>
+                                                <td colspan="4" class="text-center py-5 text-muted">
+                                                    <div class="spinner-border text-success spinner-border-sm me-2"></div> <span data-i18n="loading_records_1d485">Loading records...</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- New Record Modal -->
+    <div class="modal fade" id="newRecordModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header bg-primary-green text-white border-0 py-3">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-plus-circle me-2 text-accent"></i> <span data-i18n="add_financial_record_955be">Add Financial Record</span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4 p-md-5 bg-white">
+                    <form id="newRecordForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-dark fw-semibold mb-2"><span data-i18n="record_type_af7f7">Record Type</span></label>
+                                <select class="form-select bg-light shadow-none border-light p-3" id="recType" required="" disabled style="opacity: 0.8; background-color: #e9ecef !important; cursor: not-allowed;">
+                                    <option value="expense"><span data-i18n="expense_money_out_2561b">Expense (Money Out)</span></option>
+                                    <option value="revenue"><span data-i18n="revenue_money_in_2d34d">Revenue (Money In)</span></option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-dark fw-semibold mb-2"><span data-i18n="amount__eea83">Amount (₹)</span></label>
+                                <input type="number" class="form-control py-3 bg-light shadow-none border-light" id="recAmount" min="1" required="" placeholder="e.g. 5000" data-i18n-placeholder="eg_5000_d951f">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-dark fw-semibold mb-2"><span data-i18n="crop__product_de37f">Crop / Product</span></label>
+                                <input type="text" class="form-control py-3 bg-light shadow-none border-light" id="recCrop" required="" placeholder="e.g. Wheat" data-i18n-placeholder="eg_wheat_88746">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-dark fw-semibold mb-2"><span data-i18n="category_3adbd">Category</span></label>
+                                <input type="text" class="form-control py-3 bg-light shadow-none border-light" id="recCategory" required="" placeholder="e.g. Seeds, Labor, Sale" data-i18n-placeholder="eg_seeds_labor_sale_d011d">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-dark fw-semibold mb-2"><span data-i18n="description_b5a7a">Description</span> <span class="text-muted fw-normal"><span data-i18n="optional_d9e6f">(Optional)</span></span></label>
+                            <input type="text" class="form-control py-3 bg-light shadow-none border-light" id="recDesc" placeholder="Brief details about this transaction" data-i18n-placeholder="brief_details_about__7d18c">
+                        </div>
+                        <button type="submit" id="submitRecordBtn" class="btn btn-accent rounded-pill w-100 py-3 fw-bold fs-5 shadow-sm mt-2"><span data-i18n="save_record_a5af3">Save Record</span> <i class="fas fa-check ms-2"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = getToken();
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const role = getUserRole();
+            const user = getUserData();
+
+            document.getElementById('navUserName').textContent = user.name.split(' ')[0];
+            document.getElementById('dashLogoutBtn').addEventListener('click', logout);
+
+            document.querySelectorAll(`.${role}-only`).forEach(el => el.style.display = 'block');
+            
+            let financeChartData = null;
+
+            async function loadFinancialData() {
+                try {
+                    const [summaryRes, recordsRes] = await Promise.all([
+                        apiCall('/finance/summary', 'GET'),
+                        apiCall('/finance', 'GET')
+                    ]);
+
+                    if (summaryRes.success) {
+                        const sum = summaryRes.summary;
+                        document.getElementById('summaryExpense').textContent = sum.totalExpense.toLocaleString('en-IN');
+                        document.getElementById('summaryRevenue').textContent = sum.totalRevenue.toLocaleString('en-IN');
+                        
+                        const profitEl = document.getElementById('summaryProfit');
+                        profitEl.textContent = sum.profit.toLocaleString('en-IN');
+                        
+                        const profitCard = document.getElementById('profitCard');
+                        if(sum.profit > 0) {
+                            profitCard.style.background = 'linear-gradient(135deg, #10b981, #047857)'; // Greenish
+                        } else if (sum.profit < 0) {
+                            profitCard.style.background = 'linear-gradient(135deg, #ef4444, #b91c1c)'; // Reddish
+                        } else {
+                            profitCard.style.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)'; // Blue
+                        }
+
+                        // Render Crop Breakdown Cards
+                        const cropContainer = document.getElementById('cropBreakdownContainer');
+                        const labels = Object.keys(sum.byCrop);
+                        
+                        if (labels.length === 0) {
+                            cropContainer.innerHTML = '<div class="col-12 text-center text-muted py-3"><i class="fas fa-seedling fa-2x mb-2 text-muted opacity-50 d-block"></i> <span data-i18n="no_crop_data">No crop data available.</span></div>';
+                        } else {
+                            let cropHtml = '';
+                            labels.forEach(crop => {
+                                const exp = sum.byCrop[crop].expense;
+                                const rev = sum.byCrop[crop].revenue;
+                                const prof = rev - exp;
+                                const profColor = prof >= 0 ? 'text-success' : 'text-danger';
+                                const profIcon = prof >= 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down';
+                                
+                                cropHtml += `
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card border-0 shadow-sm rounded-4 hover-lift h-100 p-4" style="background: linear-gradient(to bottom right, #ffffff, #f8fcf8);">
+                                        <h5 class="fw-bold border-bottom pb-2 mb-3 text-dark"><i class="fas fa-leaf text-success me-2"></i>${crop}</h5>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-danger small fw-semibold"><i class="fas fa-arrow-down me-1"></i><span data-i18n="expense_lbl">Expense:</span></span>
+                                            <span class="text-dark fw-bold">₹${exp.toLocaleString('en-IN')}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                                            <span class="text-success small fw-semibold"><i class="fas fa-arrow-up me-1"></i><span data-i18n="revenue_lbl">Revenue:</span></span>
+                                            ${rev === 0
+                                                ? '<span class="badge bg-warning text-dark fw-semibold px-2 py-1"><i class="fas fa-clock me-1"></i>Pending</span>'
+                                                : '<span class="text-dark fw-bold">₹' + rev.toLocaleString('en-IN') + '</span>'
+                                            }
+                                        </div>
+                                        <div class="d-flex justify-content-between pt-1">
+                                            <span class="text-muted small fw-semibold"><span data-i18n="${prof >= 0 ? 'net_profit_lbl' : 'net_loss_lbl'}">Net ${rev === 0 ? 'Status:' : (prof >= 0 ? 'Profit:' : 'Loss:')}</span></span>
+                                            ${rev === 0
+                                                ? '<span class="badge bg-warning text-dark fw-semibold px-2 py-1"><i class="fas fa-hourglass-half me-1"></i>Revenue Pending</span>'
+                                                : '<span class="' + profColor + ' fw-bolder fs-5"><i class="fas ' + profIcon + ' me-1"></i>₹' + Math.abs(prof).toLocaleString('en-IN') + '</span>'
+                                            }
+                                        </div>
+                                    </div>
+                                </div>`;
+                            });
+                            cropContainer.innerHTML = cropHtml;
+                        }
+
+                        // Render Chart
+                        const expenses = labels.map(l => sum.byCrop[l].expense);
+                        const revenues = labels.map(l => sum.byCrop[l].revenue);
+
+                        const ctx = document.getElementById('financeChart').getContext('2d');
+                        if (financeChartData) {
+                            financeChartData.destroy();
+                        }
+                        
+                        financeChartData = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [
+                                    {
+                                        label: translations['chart_exp_lbl'] || 'Expenses (₹)',
+                                        data: expenses,
+                                        backgroundColor: '#ef4444',
+                                        borderRadius: 4
+                                    },
+                                    {
+                                        label: translations['chart_rev_lbl'] || 'Revenues (₹)',
+                                        data: revenues,
+                                        backgroundColor: '#10b981',
+                                        borderRadius: 4
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: { beginAtZero: true, grid: { borderDash: [4, 4], color: '#e5e7eb' } },
+                                    x: { grid: { display: false } }
+                                }
+                            }
+                        });
+                    }
+
+                    if (recordsRes.success) {
+                        const table = document.getElementById('recordsTable');
+                        if(recordsRes.records.length === 0) {
+                            table.innerHTML = `<tr><td colspan="4" class="text-center py-5 text-muted"><i class="fas fa-folder-open fs-2 mb-3 d-block opacity-25"></i> No transactions yet.</td></tr>`;
+                        } else {
+                            let html = '';
+                            recordsRes.records.forEach(r => {
+                                const isExp = r.type === 'expense';
+                                const badgeClass = isExp ? 'bg-danger' : 'bg-success';
+                                const icon = isExp ? 'fa-arrow-down' : 'fa-arrow-up';
+                                const sign = isExp ? '-' : '+';
+                                
+                                html += `
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-bold text-dark">${r.cropOrProduct}</div>
+                                        <div class="text-muted fs-7">${r.category}</div>
+                                    </td>
+                                    <td>
+                                        <div class="text-muted fs-7">${new Date(r.date).toLocaleDateString()}</div>
+                                    </td>
+                                    <td class="text-end">
+                                        <i class="fas ${icon} me-1"></i> ${r.type.toUpperCase()}
+                                    </td>
+                                    <td class="pe-4 text-end fw-bolder ${isExp ? 'text-danger' : 'text-success'}">
+                                        ${sign}₹${r.amount.toLocaleString('en-IN')}
+                                    </td>
+                                </tr>`;
+                            });
+                            table.innerHTML = html;
+                        }
+                    }
+
+                    // Re-apply translations for dynamic content added
+                    if (typeof applyTranslations === 'function') {
+                        applyTranslations();
+                    }
+
+                } catch (e) {
+                    console.error('Failed fetching data', e);
+                }
+            }
+
+            loadFinancialData();
+
+            // Handle New Record Submission
+            window.openRecordModal = function(type) {
+                document.getElementById('recType').value = type;
+                
+                const modalTitle = document.querySelector('#newRecordModal .modal-title');
+                const submitBtnSpan = document.querySelector('#submitRecordBtn span');
+                const modalHeader = document.querySelector('#newRecordModal .modal-header');
+
+                modalHeader.classList.remove('bg-primary-green', 'bg-danger', 'bg-success');
+
+                if (type === 'expense') {
+                    modalTitle.innerHTML = '<i class="fas fa-minus-circle me-2 text-white"></i> <span data-i18n="add_expense_new">Add Expense</span>';
+                    submitBtnSpan.textContent = 'Save Expense';
+                    submitBtnSpan.setAttribute('data-i18n', 'save_expense_new');
+                    modalHeader.classList.add('bg-danger');
+                } else {
+                    modalTitle.innerHTML = '<i class="fas fa-plus-circle me-2 text-white"></i> <span data-i18n="add_revenue_new">Add Revenue</span>';
+                    submitBtnSpan.textContent = 'Save Revenue';
+                    submitBtnSpan.setAttribute('data-i18n', 'save_revenue_new');
+                    modalHeader.classList.add('bg-success');
+                }
+                
+                new bootstrap.Modal(document.getElementById('newRecordModal')).show();
+            };
+
+            document.getElementById('newRecordForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const type = document.getElementById('recType').value;
+                const amount = document.getElementById('recAmount').value;
+                const cropOrProduct = document.getElementById('recCrop').value;
+                const category = document.getElementById('recCategory').value;
+                const description = document.getElementById('recDesc').value;
+
+                const btn = document.getElementById('submitRecordBtn');
+                const originalText = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = 'Saving...';
+
+                try {
+                    const res = await apiCall('/finance', 'POST', { type, amount, cropOrProduct, category, description });
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+
+                    if (res.success) {
+                        showAlert('Record saved successfully!', 'success');
+                        bootstrap.Modal.getInstance(document.getElementById('newRecordModal')).hide();
+                        document.getElementById('newRecordForm').reset();
+                        loadFinancialData(); // Refresh data
+                    } else {
+                        showAlert(res.message || 'Failed to save record.', 'danger');
+                    }
+                } catch (err) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                    showAlert('Network error.', 'danger');
+                }
+            });
+        });
+    </script>
+
+
+
+            <div class="lang-selector-floating" style="position:fixed; bottom:20px; right:20px; z-index:9999; background:rgba(255,255,255,0.9); padding:5px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+                <select id="langSelect" class="form-select form-select-sm border-0 shadow-none fw-bold text-success">
+                    <option value="en"><span data-i18n="english_en_935bb">English (EN)</span></option>
+                    <option value="hi"><span data-i18n="_hi_270b2">हिंदी (HI)</span></option>
+                    <option value="mr"><span data-i18n="_mr_b445f">मराठी (MR)</span></option>
+                </select>
+            </div>
+            </body></html>

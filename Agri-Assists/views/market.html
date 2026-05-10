@@ -1,0 +1,185 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Market Prices - Agri-Assists</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="d-flex flex-column min-vh-100" style="background: linear-gradient(rgba(244, 252, 245, 0.9), rgba(244, 252, 245, 0.95)), url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&amp;w=2000&amp;auto=format&amp;fit=crop') center/cover fixed;">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary-green sticky-top shadow-sm py-2 bg-opacity-75" style="backdrop-filter: blur(10px);">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-4 d-flex align-items-center" href="/">
+                <i class="fas fa-leaf text-accent me-2"></i> <span data-i18n="agriassists_eab25">Agri-Assists</span>
+            </a>
+            <div class="ms-auto" id="marketNavActions">
+                <a href="/login" class="btn btn-outline-light rounded-pill px-4 fw-bold shadow-sm"><span data-i18n="back_to_login_95e6f">Back to Login</span></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container flex-grow-1 py-5">
+        <div class="row mb-5 align-items-center bg-white p-4 rounded-4 shadow-sm mx-0 border border-light">
+            <div class="col-md-5 mb-3 mb-md-0">
+                <h2 class="fw-bolder fs-2 mb-1"><i class="fas fa-chart-line text-primary-green me-2"></i> <span data-i18n="daily_market_trends_70200">Daily Market Trends</span></h2>
+                <p class="text-muted mb-0 fs-5"><span data-i18n="track_realtime_crop__b2f50">Track real-time crop prices across major mandis.</span></p>
+            </div>
+            <div class="col-md-7">
+                <div class="row g-2 align-items-center">
+                    <div class="col-sm-4">
+                        <input type="text" id="stateInput" class="form-control border rounded-pill px-3 shadow-sm" placeholder="State (e.g. Maharashtra)" value="Maharashtra">
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" id="districtInput" class="form-control border rounded-pill px-3 shadow-sm" placeholder="District (optional)">
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" id="commodityInput" class="form-control border rounded-pill px-3 shadow-sm" placeholder="Crop (optional)">
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="btn btn-primary-custom w-100 rounded-pill fw-bold" type="button" id="searchBtn"><i class="fas fa-search me-1"></i> <span data-i18n="searchbtn_market_912f">Search</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5 animate-fade-in-up hover-lift">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle fs-5">
+                        <thead class="bg-light text-muted">
+                            <tr>
+                                <th class="ps-4 py-4 fw-semibold border-bottom-0"><span data-i18n="crop_name_c42c5">Crop Name</span></th>
+                                <th class="py-4 fw-semibold border-bottom-0"><span data-i18n="city__market_locatio_b1339">Market / Location</span></th>
+                                <th class="py-4 fw-semibold border-bottom-0">Min Price (₹/Qtl)</th>
+                                <th class="py-4 fw-semibold border-bottom-0"><span data-i18n="price_quintal_cabe8">Modal Price (₹/Qtl)</span></th>
+                                <th class="py-4 fw-semibold border-bottom-0">Max Price (₹/Qtl)</th>
+                                <th class="pe-4 py-4 fw-semibold border-bottom-0 text-end"><span data-i18n="last_updated_4221d">Arrival Date</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="marketTableBody" class="border-top-0">
+                            <tr><td colspan="6" class="text-center py-5 text-muted"><div class="spinner-border text-success" role="status"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = getToken();
+            const nav = document.getElementById('marketNavActions');
+            if(token) {
+                nav.innerHTML = '<a href="/dashboard" class="btn btn-outline-light rounded-pill px-4 fw-bold shadow-sm"><i class="fas fa-arrow-left me-2"></i> Back to Dashboard</a>';
+            }
+
+            const tbody = document.getElementById('marketTableBody');
+
+            const renderTable = (data) => {
+                let html = '';
+                data.forEach(p => {
+                    // Handle DD/MM/YYYY from data.gov.in OR ISO date strings
+                    let dateStr = p.updatedAt || '';
+                    let displayDate = dateStr;
+                    if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
+                        const [dd, mm, yyyy] = dateStr.split('/');
+                        displayDate = new Date(`${yyyy}-${mm}-${dd}`).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                    } else if (dateStr) {
+                        displayDate = new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                    }
+
+                    const cropLower = (p.crop || '').toLowerCase();
+                    let icon = 'fa-seedling';
+                    if(cropLower.includes('wheat')) icon = 'fa-wheat-awn';
+                    if(cropLower.includes('apple')) icon = 'fa-apple-alt';
+                    if(cropLower.includes('rice') || cropLower.includes('paddy')) icon = 'fa-leaf';
+                    if(cropLower.includes('onion') || cropLower.includes('potato') || cropLower.includes('tomato')) icon = 'fa-circle';
+                    if(cropLower.includes('cotton')) icon = 'fa-cloud';
+                    if(cropLower.includes('sugar')) icon = 'fa-cubes';
+
+                    const minP = p.minPrice ? `₹${Number(p.minPrice).toLocaleString('en-IN')}` : '-';
+                    const maxP = p.maxPrice ? `₹${Number(p.maxPrice).toLocaleString('en-IN')}` : '-';
+                    const modalP = p.price ? `₹${Number(p.price).toLocaleString('en-IN')}` : '-';
+
+                    html += `
+                        <tr>
+                            <td class="ps-4 fw-bold text-dark py-3">
+                                <div class="icon-box bg-light-soft text-primary-green me-3 shadow-sm rounded-circle d-inline-flex align-items-center justify-content-center align-middle" style="width:40px;height:40px;font-size:1rem;">
+                                    <i class="fas ${icon}"></i>
+                                </div>
+                                ${p.crop || '-'}
+                            </td>
+                            <td class="py-3"><i class="fas fa-map-marker-alt text-danger me-2 opacity-75"></i>${p.city || '-'}</td>
+                            <td class="py-3 text-info fw-semibold">${minP}</td>
+                            <td class="fw-bolder text-accent fs-5 py-3">${modalP}</td>
+                            <td class="py-3 text-danger fw-semibold">${maxP}</td>
+                            <td class="pe-4 text-muted fs-6 text-end py-3">${displayDate}</td>
+                        </tr>
+                    `;
+                });
+                if(data.length === 0) html = '<tr><td colspan="6" class="text-center py-5 text-muted"><i class="fas fa-search fs-1 mb-3 d-block opacity-25"></i>No matching records found.</td></tr>';
+                tbody.innerHTML = html;
+            };
+
+            const fetchPrices = async () => {
+                try {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-muted"><div class="spinner-border text-success" role="status"></div></td></tr>';
+
+                    const state     = (document.getElementById('stateInput').value     || '').trim();
+                    const district  = (document.getElementById('districtInput').value  || '').trim();
+                    const commodity = (document.getElementById('commodityInput').value || '').trim();
+
+                    const params = new URLSearchParams();
+
+                    if (commodity) {
+                        // 🌾 Crop search: skip state filter → get ALL cities nationwide for this crop
+                        params.set('commodity', commodity);
+                        // still allow optional district refinement
+                        if (district) params.set('district', district);
+                    } else {
+                        // 📍 Location search: filter by state (default Maharashtra) + optional district
+                        params.set('state', state || 'Maharashtra');
+                        if (district) params.set('district', district);
+                    }
+
+                    const res = await fetch(`/api/market-prices?${params.toString()}`).then(r => r.json());
+
+                    if (res.success && res.prices && res.prices.length > 0) {
+                        renderTable(res.prices);
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-muted"><i class="fas fa-box-open fs-1 mb-3 d-block opacity-25"></i> No matching market prices found.</td></tr>';
+                    }
+                } catch(e) {
+                    console.error(e);
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-5 text-danger"><i class="fas fa-exclamation-triangle fs-1 mb-3 d-block opacity-25"></i> Error loading market data.</td></tr>';
+                }
+            };
+
+            // Initial load — Maharashtra by default
+            fetchPrices();
+
+            // Search on button click or Enter key
+            const triggerSearch = () => fetchPrices();
+            document.getElementById('searchBtn').addEventListener('click', triggerSearch);
+            ['stateInput','districtInput','commodityInput'].forEach(id => {
+                document.getElementById(id).addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') triggerSearch();
+                });
+            });
+        });
+    </script>
+
+
+
+            <div class="lang-selector-floating" style="position:fixed; bottom:20px; right:20px; z-index:9999; background:rgba(255,255,255,0.9); padding:5px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+                <select id="langSelect" class="form-select form-select-sm border-0 shadow-none fw-bold text-success">
+                    <option value="en"><span data-i18n="english_en_935bb">English (EN)</span></option>
+                    <option value="hi"><span data-i18n="_hi_270b2">हिंदी (HI)</span></option>
+                    <option value="mr"><span data-i18n="_mr_b445f">मराठी (MR)</span></option>
+                </select>
+            </div>
+            </body></html>

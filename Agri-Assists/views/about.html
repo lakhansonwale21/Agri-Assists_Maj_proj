@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Agri-Assists</title>
+    <meta name="description" content="Learn about Agri-Assists — a smart agriculture platform empowering farmers with real-time weather, market prices, agro-shops, and expert community support.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* About Page Specific Styles */
+        .about-hero {
+            position: relative;
+            background: url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+        }
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.88) 0%, rgba(5, 150, 105, 0.92) 100%);
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-green), var(--accent-color));
+            border-radius: 3px;
+        }
+        @media (max-width: 767px) {
+            .timeline-line { left: 20px; }
+        }
+
+        .timeline-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-green);
+            border: 3px solid white;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 12px;
+            z-index: 2;
+        }
+        @media (max-width: 767px) {
+            .timeline-dot { left: 20px; }
+        }
+
+        .value-icon {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+        .value-icon:hover { transform: scale(1.1); }
+
+        .team-card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+        }
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.12) !important;
+        }
+        .team-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--light-green);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .tech-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: white;
+            border: 1px solid var(--border-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .tech-badge:hover {
+            border-color: var(--primary-green);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+            transform: translateY(-2px);
+        }
+        .tech-badge i { font-size: 1.2rem; }
+
+        .counter-box {
+            padding: 30px 20px;
+            border-radius: 16px;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease;
+        }
+        .counter-box:hover { transform: translateY(-5px); }
+
+        .gradient-divider {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-green), var(--accent-color));
+            border-radius: 4px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-bold fs-4" href="/">
+                <i class="fas fa-leaf me-2 text-accent"></i> <span data-i18n="app_title">Agri-Assists</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto ms-4">
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" href="/" data-i18n="nav_home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" href="/market" data-i18n="nav_market">Market Prices</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" href="/shops"><span data-i18n="shop_9f825">Shop</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold active" href="/about">About Us</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <select id="langSelect"
+                        class="form-select form-select-sm me-3 border-0 bg-glass text-white shadow-sm"
+                        style="width: auto;">
+                        <option value="en" class="text-dark">English</option>
+                        <option value="hi" class="text-dark">हिंदी (Hindi)</option>
+                        <option value="mr" class="text-dark">मराठी (Marathi)</option>
+                    </select>
+
+                    <ul class="navbar-nav" id="nav-guest">
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold" href="/login" data-i18n="nav_login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-accent rounded-pill ms-2 px-4 shadow-sm fw-bold" href="/register"
+                                data-i18n="nav_register">Register</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav" id="nav-auth" style="display: none;">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle fw-semibold text-white" href="#" id="navbarDropdown"
+                                role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1 fs-5 align-middle"></i> <span
+                                    id="userNameDisplay">User</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-3">
+                                <li><a class="dropdown-item py-2" href="/dashboard" data-i18n="nav_dashboard"><i
+                                            class="fas fa-columns me-2 text-primary-green"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item py-2" href="/profile"><i
+                                            class="fas fa-user me-2 text-primary-green"></i> Profile</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item py-2 text-danger" href="#" id="logoutBtn"
+                                        data-i18n="nav_logout"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Hero -->
+    <section class="about-hero">
+        <div class="container position-relative z-index-1 text-center py-5">
+            <span class="badge bg-white bg-opacity-25 text-white mb-3 px-4 py-2 rounded-pill fw-bold fs-6 shadow-sm">
+                <i class="fas fa-seedling me-2"></i> About Agri-Assists
+            </span>
+            <h1 class="display-3 fw-bolder text-white text-shadow mb-4">Empowering India's <br><span class="text-accent">Agricultural Future</span></h1>
+            <p class="lead text-white fw-light fs-4 text-shadow-sm w-75 mx-auto mb-4">
+                We're building the digital bridge between farmers, markets, and technology — making agriculture smarter, more profitable, and sustainable for everyone.
+            </p>
+            <a href="#mission" class="btn btn-accent btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg">
+                <i class="fas fa-arrow-down me-2"></i> Learn More
+            </a>
+        </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section class="py-5 bg-white" id="mission">
+        <div class="container py-5">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-6">
+                    <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=800&auto=format&fit=crop"
+                        class="img-fluid rounded-4 shadow-lg w-100" alt="Farming Fields" style="object-fit:cover; max-height:420px;">
+                </div>
+                <div class="col-lg-6">
+                    <span class="badge bg-light text-primary-green mb-3 px-3 py-2 rounded-pill fw-bold border border-success border-opacity-25">
+                        <i class="fas fa-bullseye me-1"></i> Our Mission
+                    </span>
+                    <h2 class="display-6 fw-bolder mb-4">Smart Farming for <span class="text-primary-green">Every Farmer</span></h2>
+                    <p class="text-muted fs-5 mb-4">
+                        Agri-Assists is a comprehensive digital agriculture platform designed to empower farmers, shopkeepers, and agricultural communities across India. We provide real-time data, market intelligence, and direct connections to help every stakeholder in the agricultural ecosystem thrive.
+                    </p>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle text-success fs-4 me-3"></i>
+                                <span class="fw-semibold">Data-Driven Decisions</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle text-success fs-4 me-3"></i>
+                                <span class="fw-semibold">Market Transparency</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle text-success fs-4 me-3"></i>
+                                <span class="fw-semibold">Community Support</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle text-success fs-4 me-3"></i>
+                                <span class="fw-semibold">Multilingual Access</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What We Offer -->
+    <section class="py-5 bg-light-soft">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <span class="badge bg-light text-primary-green mb-3 px-3 py-2 rounded-pill fw-bold border border-success border-opacity-25">
+                    <i class="fas fa-th-large me-1"></i> Platform Features
+                </span>
+                <h2 class="display-6 fw-bolder mb-3">What <span class="text-primary-green">We Offer</span></h2>
+                <div class="gradient-divider mt-3 mb-4"></div>
+                <p class="text-muted fs-5 w-75 mx-auto">Every tool a farmer needs, unified in one intelligent platform.</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Feature 1 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 p-4 border-0 shadow-sm rounded-4 text-center hover-lift">
+                        <div class="value-icon mx-auto mb-3" style="background: linear-gradient(135deg, #dbeafe, #eff6ff); color: #2563eb;">
+                            <i class="fas fa-cloud-sun"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">Real-Time Weather</h5>
+                        <p class="text-muted mb-0">Get accurate, location-based weather forecasts including temperature, humidity, rainfall, and wind speed to plan sowing and harvesting perfectly.</p>
+                    </div>
+                </div>
+                <!-- Feature 2 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 p-4 border-0 shadow-sm rounded-4 text-center hover-lift">
+                        <div class="value-icon mx-auto mb-3" style="background: linear-gradient(135deg, #fef3c7, #fffbeb); color: #d97706;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">Live Market Prices</h5>
+                        <p class="text-muted mb-0">Access daily Mandi prices across states, districts, and commodities. Know the real value of your crops before you sell — filtered by your exact location.</p>
+                    </div>
+                </div>
+                <!-- Feature 3 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 p-4 border-0 shadow-sm rounded-4 text-center hover-lift">
+                        <div class="value-icon mx-auto mb-3" style="background: linear-gradient(135deg, #d1fae5, #ecfdf5); color: #059669;">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">Nearby Agro-Shops</h5>
+                        <p class="text-muted mb-0">Find verified local agricultural shops selling seeds, fertilizers, pesticides, and farming equipment. Browse their products and connect directly.</p>
+                    </div>
+                </div>
+                <!-- Feature 4 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 p-4 border-0 shadow-sm rounded-4 text-center hover-lift">
+                        <div class="value-icon mx-auto mb-3" style="background: linear-gradient(135deg, #fce7f3, #fdf2f8); color: #db2777;">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">Financial Tracking</h5>
+                        <p class="text-muted mb-0">Track your income, expenses, and profits season by season. Visualize your financial data to make better business decisions for your farm.</p>
+                    </div>
+                </div>
+                <!-- Feature 5 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 p-4 border-0 shadow-sm rounded-4 text-center hover-lift">
+                        <div class="value-icon mx-auto mb-3" style="background: linear-gradient(135deg, #e0e7ff, #eef2ff); color: #4f46e5;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">Community Help</h5>
+                        <p class="text-muted mb-0">Got crop disease or pest problems? Raise requests to agricultural experts and community members for fast, actionable solutions.</p>
+                    </div>
+                </div>
+                <!-- Feature 6 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 p-4 border-0 shadow-sm rounded-4 text-center hover-lift">
+                        <div class="value-icon mx-auto mb-3" style="background: linear-gradient(135deg, #fed7aa, #fff7ed); color: #ea580c;">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">Multilingual Support</h5>
+                        <p class="text-muted mb-0">Available in English, Hindi, and Marathi — ensuring no language barriers so every farmer can use the platform comfortably.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Numbers -->
+    <section class="py-5 bg-primary-green position-relative overflow-hidden">
+        <div class="position-absolute top-0 start-0 w-100 h-100"
+            style="background: url('https://images.unsplash.com/photo-1495107334309-fcf20504a5ab?q=80&w=2000&auto=format&fit=crop') center/cover; opacity: 0.12;">
+        </div>
+        <div class="container position-relative z-index-1 py-4">
+            <div class="text-center mb-5">
+                <h2 class="display-6 fw-bolder text-white mb-3">Our Growing Impact</h2>
+                <p class="text-white fw-light fs-5 w-75 mx-auto opacity-75">Numbers that reflect our commitment to empowering farmers across the nation.</p>
+            </div>
+            <div class="row g-4 text-center">
+                <div class="col-lg-3 col-md-6">
+                    <div class="counter-box">
+                        <i class="fas fa-users text-primary-green fs-1 mb-3"></i>
+                        <h2 class="fw-bolder text-primary-green mb-1">50,000+</h2>
+                        <p class="text-muted fw-semibold mb-0 text-uppercase small">Registered Farmers</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="counter-box">
+                        <i class="fas fa-store text-primary-green fs-1 mb-3"></i>
+                        <h2 class="fw-bolder text-primary-green mb-1">500+</h2>
+                        <p class="text-muted fw-semibold mb-0 text-uppercase small">Agro-Shops Listed</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="counter-box">
+                        <i class="fas fa-chart-bar text-primary-green fs-1 mb-3"></i>
+                        <h2 class="fw-bolder text-primary-green mb-1">120+</h2>
+                        <p class="text-muted fw-semibold mb-0 text-uppercase small">Markets Covered</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="counter-box">
+                        <i class="fas fa-globe-americas text-primary-green fs-1 mb-3"></i>
+                        <h2 class="fw-bolder text-primary-green mb-1">3</h2>
+                        <p class="text-muted fw-semibold mb-0 text-uppercase small">Languages Supported</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-5 bg-white">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <span class="badge bg-light text-primary-green mb-3 px-3 py-2 rounded-pill fw-bold border border-success border-opacity-25">
+                    <i class="fas fa-cogs me-1"></i> Getting Started
+                </span>
+                <h2 class="display-6 fw-bolder mb-3">How It <span class="text-primary-green">Works</span></h2>
+                <div class="gradient-divider mt-3 mb-4"></div>
+                <p class="text-muted fs-5">Get up and running in just three simple steps.</p>
+            </div>
+
+            <div class="row g-5">
+                <div class="col-md-4 text-center">
+                    <div class="position-relative mb-4">
+                        <div class="value-icon mx-auto" style="background: linear-gradient(135deg, var(--light-green), #ffffff); color: var(--primary-green); width:90px; height:90px; font-size:2rem;">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-accent shadow"
+                            style="font-size: 0.85rem; padding: 6px 14px;">Step 1</span>
+                    </div>
+                    <h5 class="fw-bold mb-2">Create Your Account</h5>
+                    <p class="text-muted">Register as a Farmer or Shopkeeper with a quick sign-up. It's completely free and takes under a minute.</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="position-relative mb-4">
+                        <div class="value-icon mx-auto" style="background: linear-gradient(135deg, #fef3c7, #ffffff); color: #d97706; width:90px; height:90px; font-size:2rem;">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-accent shadow"
+                            style="font-size: 0.85rem; padding: 6px 14px;">Step 2</span>
+                    </div>
+                    <h5 class="fw-bold mb-2">Access Your Dashboard</h5>
+                    <p class="text-muted">View weather, market prices, nearby shops, financial tools, and community requests — all from a single personalized dashboard.</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="position-relative mb-4">
+                        <div class="value-icon mx-auto" style="background: linear-gradient(135deg, #dbeafe, #ffffff); color: #2563eb; width:90px; height:90px; font-size:2rem;">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-accent shadow"
+                            style="font-size: 0.85rem; padding: 6px 14px;">Step 3</span>
+                    </div>
+                    <h5 class="fw-bold mb-2">Grow & Connect</h5>
+                    <p class="text-muted">Make informed decisions, buy quality supplies, track finances, and connect with the agricultural community for mutual growth.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Stack -->
+    <section class="py-5 bg-light-soft">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <span class="badge bg-light text-primary-green mb-3 px-3 py-2 rounded-pill fw-bold border border-success border-opacity-25">
+                    <i class="fas fa-code me-1"></i> Built With
+                </span>
+                <h2 class="display-6 fw-bolder mb-3">Our <span class="text-primary-green">Technology</span></h2>
+                <div class="gradient-divider mt-3 mb-4"></div>
+                <p class="text-muted fs-5">Powered by modern, reliable technologies to ensure the best experience.</p>
+            </div>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <div class="tech-badge"><i class="fab fa-node-js text-success"></i> Node.js</div>
+                <div class="tech-badge"><i class="fab fa-js-square text-warning"></i> Express.js</div>
+                <div class="tech-badge"><i class="fas fa-database text-success"></i> MongoDB</div>
+                <div class="tech-badge"><i class="fab fa-bootstrap text-primary"></i> Bootstrap 5</div>
+                <div class="tech-badge"><i class="fas fa-cloud-sun text-info"></i> OpenWeather API</div>
+                <div class="tech-badge"><i class="fas fa-chart-area text-danger"></i> Market Data API</div>
+                <div class="tech-badge"><i class="fas fa-lock text-secondary"></i> JWT Auth</div>
+                <div class="tech-badge"><i class="fas fa-language text-primary-green"></i> i18n Support</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-5 bg-primary-green position-relative overflow-hidden">
+        <div class="position-absolute top-0 start-0 w-100 h-100"
+            style="background: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2000&auto=format&fit=crop') center/cover; opacity: 0.1;">
+        </div>
+        <div class="container position-relative z-index-1 text-center py-5">
+            <h2 class="display-5 fw-bolder text-white mb-4">Ready to Transform Your Farming?</h2>
+            <p class="lead text-white fw-light mb-5 w-75 mx-auto">
+                Join thousands of progressive farmers who are already making smarter, data-driven agricultural decisions with Agri-Assists.
+            </p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="/register" class="btn btn-accent btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg fs-5">
+                    <i class="fas fa-rocket me-2"></i> Get Started Free
+                </a>
+                <a href="/#contact" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg bg-glass fs-5">
+                    <i class="fas fa-envelope me-2"></i> Contact Us
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5 text-center mt-auto">
+        <div class="container pt-3">
+            <div class="row align-items-center">
+                <div class="col-md-4 text-md-start mb-3 mb-md-0">
+                    <a class="navbar-brand fw-bold fs-3 text-white text-decoration-none" href="/">
+                        <i class="fas fa-leaf text-accent me-2"></i> <span data-i18n="agriassists_eab25">Agri-Assists</span>
+                    </a>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <p class="mb-0 text-white-50">© 2026 Agri-Assists. All rights reserved.</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="#" class="text-white-50 me-3 fs-4"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-white-50 me-3 fs-4"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-white-50 fs-4"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Agri-Assists</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .sidebar {
+            background-color: #fff;
+            min-height: calc(100vh - 66px);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .sidebar .nav-link {
+            color: var(--text-dark) !important;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: var(--light-green);
+            color: var(--primary-green) !important;
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link.active {
+            background-color: var(--primary-green);
+            color: white !important;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100"
+    style="background: linear-gradient(rgba(244, 252, 245, 0.4), rgba(244, 252, 245, 0.6)), url('https://images.unsplash.com/photo-1586771107445-d3afeb0ecc92?q=80&amp;w=2000&amp;auto=format&amp;fit=crop') center/cover fixed;">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary-green sticky-top shadow-sm py-2 bg-opacity-75"
+        style="backdrop-filter: blur(10px);">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold fs-4 d-flex align-items-center" href="/">
+                <i class="fas fa-leaf text-accent me-2"></i> <span data-i18n="agriassists_eab25">Agri-Assists</span>
+            </a>
+            <div class="d-flex align-items-center">
+                <a href="/profile" class="text-decoration-none">
+                    <div class="bg-glass px-3 py-1 rounded-pill me-3 d-flex align-items-center border border-light border-opacity-25"
+                        style="transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'"
+                        onmouseout="this.style.transform='scale(1)'">
+                        <i class="fas fa-user-circle text-white me-2 fs-5"></i>
+                        <span id="navUserName" class="text-white fw-semibold"></span>
+                    </div>
+                </a>
+                <button type="button" class="btn btn-outline-light rounded-pill px-3 fw-bold btn-sm shadow-sm"
+                    id="dashLogoutBtn"><span data-i18n="logout_0323d">Logout</span> <i
+                        class="fas fa-sign-out-alt ms-1"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid flex-grow-1">
+        <div class="row h-100">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 p-3 sidebar d-none d-md-block shadow-sm z-index-1 position-sticky"
+                style="top: 66px;">
+                <h6 class="text-muted text-uppercase fw-bold mb-3 px-3 fs-7"><span data-i18n="menu_b6154">Menu</span>
+                </h6>
+                <ul class="nav flex-column mb-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/dashboard"><i
+                                class="fas fa-chart-pie me-2 w-20px text-center"></i> <span
+                                data-i18n="dashboard_2938c">Dashboard</span></a>
+                    </li>
+                    <li class="nav-item farmer-only" style="display:none;">
+                        <a class="nav-link" href="/market"><i class="fas fa-chart-line me-2 w-20px text-center"></i>
+                            <span data-i18n="market_prices_65f02">Market Prices</span></a>
+                    </li>
+                    <li class="nav-item farmer-only" style="display:none;">
+                        <a class="nav-link" href="/shops"><i class="fas fa-store me-2 w-20px text-center"></i> <span
+                                data-i18n="nearby_shops_7fe3e">Nearby Shops</span></a>
+                    </li>
+                    <li class="nav-item shopkeeper-only" style="display:none;">
+                        <a class="nav-link" href="/products"><i class="fas fa-box-open me-2 w-20px text-center"></i>
+                            <span data-i18n="products_068f8">Products</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/requests"><i
+                                class="fas fa-clipboard-list me-2 w-20px text-center"></i> <span
+                                data-i18n="requests_b134a">Requests</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/finance"><i class="fas fa-wallet me-2 w-20px text-center"></i> <span
+                                data-i18n="finance_tracking">Finance &amp; Expenses</span></a>
+                    </li>
+                    <li class="nav-item mt-4">
+                        <h6 class="text-muted text-uppercase fw-bold mb-3 px-3 fs-7"><span
+                                data-i18n="settings_f4f70">Settings</span></h6>
+                        <a class="nav-link" href="/profile"><i
+                                class="fas fa-user-cog me-2 w-20px text-center text-secondary"></i> <span
+                                data-i18n="my_profile_e8956">My Profile</span></a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 p-4 p-md-5" style="background-color: rgba(244, 252, 245, 0.3);">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                    <h2 class="fw-bolder fs-2 mb-0"><span data-i18n="overview_3b878">Overview</span> <span
+                            class="fs-4 text-muted fw-normal ms-2" id="dashName"></span></h2>
+                    <div class="d-flex align-items-center gap-2">
+
+                        <span class="badge bg-white text-dark border px-3 py-2 rounded-pill shadow-sm"
+                            id="currentDateBadge"></span>
+                    </div>
+                </div>
+
+                <!-- FARMER DASHBOARD -->
+                <div id="farmerDashboard" style="display:none;">
+                    <div class="row g-4 mb-4">
+                        <div class="col-lg-4">
+                            <div class="card weather-widget h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative animate-fade-in-up stagger-1 hover-lift"
+                                style="min-height: 250px;">
+                                <div class="weather-glass-overlay"></div>
+                                <div class="card-body p-4 text-white text-center position-relative z-index-1 d-flex flex-column"
+                                    id="farmerWeather">
+                                    <div class="m-auto">
+                                        <div class="spinner-border text-light" role="status"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="card border-0 shadow-sm h-100 rounded-4 animate-fade-in-up stagger-2 hover-lift">
+                                <div
+                                    class="card-header bg-white border-0 pt-4 pb-2 px-4 d-flex justify-content-between align-items-center">
+                                    <h5 class="fw-bold mb-0 text-dark"><i
+                                            class="fas fa-chart-line text-primary-green me-2"></i> <span
+                                            data-i18n="local_market_trends_da57e">Local Market Trends</span></h5>
+                                    <a href="/market"
+                                        class="btn btn-sm btn-outline-primary-custom rounded-pill px-3 fw-bold"><span
+                                            data-i18n="full_report_632a9">Full Report</span></a>
+                                </div>
+                                <div class="card-body px-4 pb-4">
+                                    <canvas id="marketChart" style="max-height: 250px;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SHOPKEEPER DASHBOARD -->
+                <div id="shopkeeperDashboard" style="display:none;">
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm rounded-4 pe-none position-relative overflow-hidden animate-fade-in-up stagger-1 hover-lift"
+                                style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green));">
+                                <i class="fas fa-boxes fa-5x position-absolute opacity-10"
+                                    style="right: -10px; bottom: -10px; color: white;"></i>
+                                <div class="card-body p-4 text-white">
+                                    <h6 class="text-uppercase fw-bold mb-2 text-white-50"><span
+                                            data-i18n="total_products_b0f79">Total Products</span></h6>
+                                    <h2 class="display-4 fw-bolder mb-0" id="totalProductsCount">-</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm rounded-4 pe-none position-relative overflow-hidden animate-fade-in-up stagger-2 hover-lift"
+                                style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                                <i class="fas fa-clock fa-5x position-absolute opacity-10"
+                                    style="right: -10px; bottom: -10px; color: white;"></i>
+                                <div class="card-body p-4 text-white">
+                                    <h6 class="text-uppercase fw-bold mb-2 text-white-50"><span
+                                            data-i18n="pending_requests_a8ed4">Pending Requests</span></h6>
+                                    <h2 class="display-4 fw-bolder mb-0" id="pendingReqCount">-</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div
+                                class="card border-0 shadow-sm rounded-4 position-relative overflow-hidden bg-white h-100 d-flex flex-column justify-content-center border border-light animate-fade-in-up stagger-3 hover-lift">
+                                <div class="card-body p-4 text-center">
+                                    <div class="icon-box mb-3 mx-auto"
+                                        style="width: 60px; height: 60px; font-size: 1.5rem;">
+                                        <i class="fas fa-box-open"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-2 text-dark"><span data-i18n="quick_action_56b0c">Quick
+                                            Action</span></h5>
+                                    <a href="/products"
+                                        class="btn btn-accent rounded-pill px-4 fw-bold shadow-sm w-100"><span
+                                            data-i18n="manage_inventory_70673">Manage Inventory</span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Common Recent Requests Preview -->
+                <div class="card border-0 shadow-sm rounded-4 mb-5 animate-fade-in-up stagger-4 hover-lift">
+                    <div
+                        class="card-header bg-white pt-4 pb-3 px-4 border-bottom border-light d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0 text-dark"><i class="fas fa-clipboard-list text-primary-green me-2"></i>
+                            <span data-i18n="recent_requests_5beac">Recent Requests</span>
+                        </h5>
+                        <a href="/requests"
+                            class="btn btn-sm btn-outline-primary-custom rounded-pill px-3 fw-bold"><span
+                                data-i18n="view_all_d8d7a">View All</span></a>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0 fs-6">
+                                <thead class="table-light text-muted">
+                                    <tr>
+                                        <th class="ps-4 py-3 fw-semibold"><span data-i18n="product_deb10">Product</span>
+                                        </th>
+                                        <th class="py-3 fw-semibold"><span data-i18n="quantity_694e8">Quantity</span>
+                                        </th>
+                                        <th id="reqTargetCol" class="py-3 fw-semibold"><span
+                                                data-i18n="tofrom_829ca">To/From</span></th>
+                                        <th class="pe-4 py-3 fw-semibold text-end"><span
+                                                data-i18n="status_ec53a">Status</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentRequestsTable">
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5 text-muted">
+                                            <div class="spinner-border text-success spinner-border-sm me-2"></div> <span
+                                                data-i18n="loading_requests_810c0">Loading requests...</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- New Request Modal (Farmer) -->
+    <div class="modal fade" id="newRequestModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header bg-primary-green text-white border-0 py-3">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-paper-plane me-2 text-accent"></i> <span
+                            data-i18n="create_new_request_8e32d">Create New
+                            Request</span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4 p-md-5 bg-white">
+                    <form id="newRequestForm">
+                        <div class="mb-3">
+                            <label class="form-label text-dark fw-semibold mb-2"><span
+                                    data-i18n="select_shopkeeper_ef936">Select Shopkeeper</span></label>
+                            <select class="form-select bg-light shadow-none border-light p-3" id="newReqShop"
+                                required="">
+                                <option value=""><span data-i18n="_choose_a_shop__ed1cb">-- Choose a Shop --</span>
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-dark fw-semibold mb-2"><span
+                                    data-i18n="select_product_d401f">Select Product</span></label>
+                            <select class="form-select bg-light shadow-none border-light p-3" id="newReqProduct"
+                                required="" disabled="">
+                                <option value=""><span data-i18n="_choose_a_product__d1f08">-- Choose a Product
+                                        --</span></option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-dark fw-semibold mb-2"><span
+                                    data-i18n="quantity_required_0aa62">Quantity Required</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0 py-3"><i
+                                        class="fas fa-sort-numeric-up text-primary-green"></i></span>
+                                <input type="number" class="form-control py-3 bg-light shadow-none border-start-0"
+                                    id="newReqQuantity" min="1" required="" placeholder="Enter amount"
+                                    data-i18n-placeholder="enter_amount_b532a">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-dark fw-semibold mb-2"><span
+                                    data-i18n="message_to_shopkeepe_c4f28">Message to Shopkeeper</span> <span
+                                    class="text-muted fw-normal"><span
+                                        data-i18n="optional_d9e6f">(Optional)</span></span></label>
+                            <textarea class="form-control bg-light shadow-none border-light p-3" id="newReqMessage"
+                                rows="3" placeholder="I need this urgently for my farm..."
+                                data-i18n-placeholder="i_need_this_urgently_e2e32"></textarea>
+                        </div>
+                        <button type="submit" id="submitNewRequestBtn"
+                            class="btn btn-accent rounded-pill w-100 py-3 fw-bold fs-5 shadow-sm mt-2"><span
+                                data-i18n="send_request_2da24">Send Request</span> <i
+                                class="fas fa-check-circle ms-2"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = getToken();
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const role = getUserRole();
+            const user = getUserData();
+
+            document.getElementById('navUserName').textContent = user.name.split(' ')[0];
+            document.getElementById('dashName').textContent = `${translations['js_hi'] || 'Hi'}, ${user.name.split(' ')[0]}! 👋`;
+
+            const dateBadge = document.getElementById('currentDateBadge');
+            if (dateBadge) dateBadge.innerHTML = `<i class="far fa-calendar-alt text-primary-green me-2"></i>` + new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+            document.getElementById('dashLogoutBtn').addEventListener('click', logout);
+
+            // Show relevant sidebar items
+            document.querySelectorAll(`.${role}-only`).forEach(el => el.style.display = 'block');
+            document.getElementById('reqTargetCol').textContent = role === 'farmer' ? (translations['js_target_shop'] || 'Target Shop') : (translations['js_req_farmer'] || 'Requesting Farmer');
+
+            if (role === 'farmer') {
+                document.getElementById('farmerDashboard').style.display = 'block';
+
+                // Fetch Weather
+                try {
+                    const wRes = await apiCall(`/weather?city=${user.city}`, 'GET');
+                    if (wRes.success) {
+                        const w = wRes.weather;
+                        document.getElementById('farmerWeather').innerHTML = `
+                            <h5 class="fw-bold mb-3 d-inline-block bg-white bg-opacity-25 px-3 py-1 rounded-pill mx-auto"><i class="fas fa-map-marker-alt text-danger me-2"></i>${w.name}</h5>
+                            <div class="display-2 fw-bolder mb-0 text-shadow mt-2">${Math.round(w.main.temp)}°C</div>
+                            <p class="mb-3 fs-4 fw-semibold"><i class="fas fa-cloud-sun text-warning me-2"></i>${w.weather[0].main}</p>
+                            <div class="row w-100 mx-0 border-top border-light border-opacity-25 pt-3 mt-auto">
+                                <div class="col-6 border-end border-light border-opacity-25 text-center"><i class="fas fa-tint me-2"></i>${w.main.humidity}%</div>
+                                <div class="col-6 text-center"><i class="fas fa-wind me-2"></i>${w.wind.speed} m/s</div>
+                            </div>
+                        `;
+                    } else {
+                        document.getElementById('farmerWeather').innerHTML = `<p class=\"m-auto text-warning\">${translations['js_load_weath'] || 'Could not load weather.'}</p>`;
+                    }
+                } catch (e) {
+                    document.getElementById('farmerWeather').innerHTML = `<p class=\"m-auto text-warning\">${translations['js_weather_err'] || 'Weather error.'}</p>`;
+                }
+
+                // Fetch Market Data for Chart
+                try {
+                    const mRes = await apiCall('/market/prices', 'GET');
+                    if (mRes.success) {
+                        const ctx = document.getElementById('marketChart').getContext('2d');
+                        const filtered = mRes.prices.slice(0, 5);
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: filtered.map(p => p.crop),
+                                datasets: [{
+                                    label: 'Price (₹/Quintal)',
+                                    data: filtered.map(p => p.price),
+                                    backgroundColor: '#10b981',
+                                    borderRadius: 6,
+                                    borderSkipped: false
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    y: { beginAtZero: true, grid: { borderDash: [4, 4], color: '#e5e7eb' } },
+                                    x: { grid: { display: false } }
+                                }
+                            }
+                        });
+                    }
+                } catch (e) { }
+            } else if (role === 'shopkeeper') {
+                document.getElementById('shopkeeperDashboard').style.display = 'block';
+
+                // Fetch Shop Products Count
+                try {
+                    const pRes = await apiCall('/products/shop', 'GET');
+                    if (pRes.success) {
+                        document.getElementById('totalProductsCount').textContent = pRes.products.length;
+                    }
+                } catch (e) { }
+            }
+
+            // Fetch and render recent requests for both roles
+            try {
+                const reqRes = await apiCall('/requests', 'GET');
+                const reqTable = document.getElementById('recentRequestsTable');
+
+                if (reqRes.success && reqRes.requests.length > 0) {
+                    let html = '';
+                    const displayReqs = reqRes.requests.slice(0, 5); // display top 5
+
+                    if (role === 'shopkeeper') {
+                        const pendingCount = reqRes.requests.filter(r => r.status === 'pending').length;
+                        document.getElementById('pendingReqCount').textContent = pendingCount;
+                    }
+
+                    displayReqs.forEach(req => {
+                        const targetName = role === 'farmer' ? req.shopId?.shopName : req.farmerId?.name;
+                        const badgeClass = req.status === 'pending' ? 'bg-warning text-dark' : (req.status === 'accepted' ? 'bg-success' : 'bg-danger');
+                        html += `\n<tr>\n<td class=\"ps-4 fw-bold text-dark\"><i class=\"fas fa-box text-muted me-2\"></i> ${req.productId ? req.productId.productName : (translations['js_del_prod'] || 'Deleted Product')}</td>\n<td>${req.quantity} ${translations['js_units'] || 'unit(s)'}</td>\n<td>${targetName || (translations['js_unknown'] || 'Unknown')}</td>\n<td class=\"pe-4 text-end\">${req.status.toUpperCase()}</td>\n</tr>\n`;
+                    });
+                    reqTable.innerHTML = html;
+                } else {
+                    reqTable.innerHTML = `<tr><td colspan=\"4\" class=\"text-center py-5 text-muted\"><i class=\"fas fa-folder-open fs-2 mb-3 d-block opacity-25\"></i> ${translations['js_no_req'] || 'No requests found.'}</td></tr>`;
+                }
+            } catch (e) {
+                document.getElementById('recentRequestsTable').innerHTML = `<tr><td colspan=\"4\" class=\"text-center py-4 text-danger\">${translations['js_err_req'] || 'Error loading requests.'}</td></tr>`;
+            }
+
+            // Handle New Request Form Logic for Farmers
+            if (role === 'farmer') {
+                const newReqShop = document.getElementById('newReqShop');
+                const newReqProduct = document.getElementById('newReqProduct');
+                let allProducts = [];
+
+                const requestModalElement = document.getElementById('newRequestModal');
+                if (requestModalElement) {
+                    requestModalElement.addEventListener('show.bs.modal', async () => {
+                        try {
+                            const pRes = await apiCall('/products', 'GET');
+                            if (pRes.success) {
+                                allProducts = pRes.products;
+
+                                const uniqueShops = [];
+                                allProducts.forEach(p => {
+                                    if (p.shopId && !uniqueShops.some(s => s._id === p.shopId._id)) {
+                                        uniqueShops.push(p.shopId);
+                                    }
+                                });
+                                uniqueShops.sort((a, b) => (a.shopName || '').localeCompare(b.shopName || ''));
+
+                                newReqShop.innerHTML = '<option value="">-- Choose a Shop --</option>';
+                                uniqueShops.forEach(shop => {
+                                    const option = document.createElement('option');
+                                    option.value = shop._id;
+                                    option.textContent = shop.shopName || 'Unknown Shop';
+                                    newReqShop.appendChild(option);
+                                });
+                            }
+                        } catch (e) {
+                            console.error('Failed to load products for new request', e);
+                        }
+                    });
+
+                    newReqShop.addEventListener('change', (e) => {
+                        const shopId = e.target.value;
+                        newReqProduct.innerHTML = '<option value="">-- Choose a Product --</option>';
+                        if (!shopId) {
+                            newReqProduct.disabled = true;
+                            return;
+                        }
+
+                        const shopProducts = allProducts.filter(p => p.shopId && p.shopId._id === shopId && p.quantity > 0);
+                        shopProducts.forEach(p => {
+                            const option = document.createElement('option');
+                            option.value = p._id;
+                            option.textContent = `${p.productName} (₹${p.price} - ${p.quantity} left)`;
+                            newReqProduct.appendChild(option);
+                        });
+                        newReqProduct.disabled = false;
+                    });
+
+                    document.getElementById('newRequestForm').addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const shopId = newReqShop.value;
+                        const productId = newReqProduct.value;
+                        const quantity = document.getElementById('newReqQuantity').value;
+                        const message = document.getElementById('newReqMessage').value;
+
+                        const btn = document.getElementById('submitNewRequestBtn');
+                        const originalText = btn.innerHTML;
+                        btn.disabled = true;
+                        btn.innerHTML = 'Sending...';
+
+                        try {
+                            const res = await apiCall('/requests', 'POST', { shopId, productId, quantity, message });
+                            btn.disabled = false;
+                            btn.innerHTML = originalText;
+
+                            if (res.success) {
+                                showAlert('Request sent successfully!', 'success');
+                                bootstrap.Modal.getInstance(requestModalElement).hide();
+                                document.getElementById('newRequestForm').reset();
+                                // Reload dashboard requests table
+                                window.location.reload();
+                            } else {
+                                showAlert(res.message || 'Failed to send request.', 'danger');
+                            }
+                        } catch (err) {
+                            btn.disabled = false;
+                            btn.innerHTML = originalText;
+                            showAlert('Network error.', 'danger');
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+
+
+
+    <div class="lang-selector-floating"
+        style="position:fixed; bottom:20px; right:20px; z-index:9999; background:rgba(255,255,255,0.9); padding:5px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+        <select id="langSelect" class="form-select form-select-sm border-0 shadow-none fw-bold text-success">
+            <option value="en"><span data-i18n="english_en_935bb">English (EN)</span></option>
+            <option value="hi"><span data-i18n="_hi_270b2">हिंदी (HI)</span></option>
+            <option value="mr"><span data-i18n="_mr_b445f">मराठी (MR)</span></option>
+        </select>
+    </div>
+
+
+</body>
+
+</html>

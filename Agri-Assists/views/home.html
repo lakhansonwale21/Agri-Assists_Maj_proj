@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri-Assists | Smart Farming Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="d-flex flex-column min-vh-100"
+    style="background: linear-gradient(rgba(244, 252, 245, 0.8), rgba(244, 252, 245, 0.95)), url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&amp;w=2000&amp;auto=format&amp;fit=crop') center/cover fixed;">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-bold fs-4" href="/">
+                <i class="fas fa-leaf me-2 text-accent"></i> <span data-i18n="app_title">Agri-Assists</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto ms-4">
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" href="/" data-i18n="nav_home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" href="/market" data-i18n="nav_market">Market Prices</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" href="/shops"><span data-i18n="shop_9f825">Shop</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" href="#contact"><span data-i18n="nav_contact">Contact
+                                Us</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold" href="/about">About Us</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <select id="langSelect"
+                        class="form-select form-select-sm me-3 border-0 bg-glass text-white shadow-sm"
+                        style="width: auto;">
+                        <option value="en" class="text-dark"><span data-i18n="english_78463">English</span></option>
+                        <option value="hi" class="text-dark"><span data-i18n="_hindi_0c8cc">हिंदी (Hindi)</span>
+                        </option>
+                        <option value="mr" class="text-dark"><span data-i18n="_marathi_ef439">मराठी (Marathi)</span>
+                        </option>
+                    </select>
+
+                    <ul class="navbar-nav" id="nav-guest">
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold" href="/login" data-i18n="nav_login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-accent rounded-pill ms-2 px-4 shadow-sm fw-bold" href="/register"
+                                data-i18n="nav_register">Register</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav" id="nav-auth" style="display: none;">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle fw-semibold text-white" href="#" id="navbarDropdown"
+                                role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1 fs-5 align-middle"></i> <span
+                                    id="userNameDisplay"><span data-i18n="user_8f9bf">User</span></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg rounded-3">
+                                <li><a class="dropdown-item py-2" href="/dashboard" data-i18n="nav_dashboard"><i
+                                            class="fas fa-columns me-2 text-primary-green"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item py-2" href="/profile"><i
+                                            class="fas fa-user me-2 text-primary-green"></i> <span
+                                            data-i18n="profile_cce99">Profile</span></a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item py-2 text-danger" href="#" id="logoutBtn"
+                                        data-i18n="nav_logout"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section d-flex align-items-center">
+        <div class="container relative z-index-1">
+            <div class="row w-100">
+                <div class="col-lg-8 col-xl-7 hero-text-wrapper">
+                    <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill fw-bold fs-6 shadow-sm"><i
+                            class="fas fa-star text-danger me-1"></i> <span
+                            data-i18n="empowering_farmers_g_1e78b">Empowering Farmers Globally</span></span>
+                    <h1 class="display-3 fw-bolder mb-4 text-white text-shadow lh-sm"><span
+                            data-i18n="smart_agriculture_42a06">Smart Agriculture</span><br><span
+                            class="text-accent"><span data-i18n="made_simple_8ec94">Made Simple</span></span></h1>
+                    <p class="lead mb-5 text-light fw-light fs-4 text-shadow-sm pe-lg-5" data-i18n="hero_subtitle">
+                        Access real-time weather, accurate crop market prices, quality supplies, and direct expert
+                        support—all in one place.</p>
+
+                    <div class="glass-search-bar p-2 rounded-pill mb-5 d-flex align-items-center shadow-lg w-75">
+                        <i class="fas fa-search text-white ms-3 opacity-75"></i>
+                        <input type="text" class="form-control border-0 bg-transparent text-white ms-2 shadow-none"
+                            placeholder="Search for crops, markets..." id="heroSearch"
+                            data-i18n-placeholder="search_for_crops_mar_f0ca6">
+                        <button class="btn btn-accent rounded-pill px-4 fw-bold"
+                            onclick="window.location.href='/market'"><span
+                                data-i18n="search_13348">Search</span></button>
+                    </div>
+
+                    <div class="hero-action-buttons d-flex flex-wrap gap-3">
+                        <a href="/register" class="btn btn-accent btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg"><span
+                                data-i18n="get_started_free_70009">Get Started Free</span></a>
+                        <a href="/market"
+                            class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-bold shadow-lg bg-glass"><i
+                                class="fas fa-chart-line me-2"></i> <span data-i18n="market_trends_b918c">Market
+                                Trends</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Stats -->
+    <section class="stats-section py-4 bg-white mt-n5 position-relative z-index-2 shadow-sm mx-auto"
+        style="max-width: 900px;">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3 col-6 mb-3 mb-md-0 border-end border-light">
+                    <h2 class="fw-bold text-primary-green mb-0"><span data-i18n="50k_13a0c">50K+</span></h2>
+                    <p class="text-muted mb-0 small text-uppercase fw-semibold"><span
+                            data-i18n="farmers_cba34">Farmers</span></p>
+                </div>
+                <div class="col-md-3 col-6 mb-3 mb-md-0 border-end-md border-light">
+                    <h2 class="fw-bold text-primary-green mb-0">120+</h2>
+                    <p class="text-muted mb-0 small text-uppercase fw-semibold"><span
+                            data-i18n="markets_52c37">Markets</span></p>
+                </div>
+                <div class="col-md-3 col-6 border-end border-light">
+                    <h2 class="fw-bold text-primary-green mb-0">24/7</h2>
+                    <p class="text-muted mb-0 small text-uppercase fw-semibold"><span
+                            data-i18n="weather_updates_0c022">Weather Updates</span></p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <h2 class="fw-bold text-primary-green mb-0">100%</h2>
+                    <p class="text-muted mb-0 small text-uppercase fw-semibold"><span
+                            data-i18n="verified_prices_ca3c6">Verified Prices</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services / Tabs Section -->
+    <section class="py-5 bg-light-soft mt-5 mb-0">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <h2 class="fw-bolder display-5 mb-3"><span data-i18n="explore_our_58df8">Explore Our</span> <span
+                        class="text-primary-green"><span data-i18n="digital_services_141c9">Digital
+                            Services</span></span></h2>
+                <p class="text-muted fs-6 fs-md-5 col-12 col-md-10 col-lg-8 mx-auto px-3"><span
+                        data-i18n="everything_you_need__bc611">Everything you need for a successful harvest, organized
+                        in one intuitive platform designed specifically to maximize agricultural yield.</span></p>
+            </div>
+
+            <!-- Custom Tabs -->
+            <ul class="nav nav-pills nav-fill custom-pills mb-5 justify-content-center flex-row flex-wrap gap-2 gap-md-3"
+                id="serviceTabs" role="tablist">
+                <li class="nav-item flex-fill flex-sm-grow-0" role="presentation">
+                    <button
+                        class="nav-link text-dark active rounded-pill px-3 px-md-4 py-2 py-md-3 fw-bold shadow-sm w-100 text-nowrap"
+                        id="weather-tab" data-bs-toggle="tab" data-bs-target="#weather-panel" type="button"
+                        role="tab"><i class="fas fa-cloud-sun me-2 fs-5"></i> <span
+                            data-i18n="local_weather_64b71">Local Weather</span></button>
+                </li>
+                <li class="nav-item flex-fill flex-sm-grow-0" role="presentation">
+                    <button
+                        class="nav-link text-dark rounded-pill px-3 px-md-4 py-2 py-md-3 fw-bold shadow-sm w-100 text-nowrap"
+                        id="market-tab" data-bs-toggle="tab" data-bs-target="#market-panel" type="button" role="tab"><i
+                            class="fas fa-chart-line me-2 fs-5"></i> <span data-i18n="Market_Intelligence_ee2be">Market
+                            Intel</span></button>
+                </li>
+                <li class="nav-item flex-fill flex-sm-grow-0" role="presentation">
+                    <button
+                        class="nav-link text-dark rounded-pill px-3 px-md-4 py-2 py-md-3 fw-bold shadow-sm w-100 text-nowrap"
+                        id="shop-tab" data-bs-toggle="tab" data-bs-target="#shop-panel" type="button" role="tab"><i
+                            class="fas fa-store me-2 fs-5"></i> <span
+                            data-i18n="agroshops_6ee45">Agro-Shops</span></button>
+                </li>
+                <li class="nav-item flex-fill flex-sm-grow-0" role="presentation">
+                    <button
+                        class="nav-link text-dark rounded-pill px-3 px-md-4 py-2 py-md-3 fw-bold shadow-sm w-100 text-nowrap"
+                        id="comm-tab" data-bs-toggle="tab" data-bs-target="#comm-panel" type="button" role="tab"><i
+                            class="fas fa-users me-2 fs-5"></i> <span
+                            data-i18n="community_7d619">Community</span></button>
+                </li>
+            </ul>
+
+            <!-- Tab Contents -->
+            <div class="tab-content" id="serviceTabsContent">
+
+                <!-- Weather Panel -->
+                <div class="tab-pane fade show active" id="weather-panel" role="tabpanel">
+                    <div
+                        class="row align-items-center bg-white rounded-4 shadow-sm p-4 p-md-5 border border-light mx-1">
+                        <div class="col-lg-5 mb-4 mb-lg-0 pe-lg-5">
+                            <span
+                                class="badge bg-light text-primary-green mb-3 px-3 py-2 rounded-pill fw-bold border border-success border-opacity-25"><span
+                                    data-i18n="meteorological_data_cd2f3">Meteorological Data</span></span>
+                            <h3 class="fw-bold mb-3 display-6"><span data-i18n="accurate_weather_for_cfde4">Accurate
+                                    Weather Forecasts</span></h3>
+                            <p class="text-muted mb-4 fs-5"><span data-i18n="plan_your_sowing_irr_08f52">Plan your
+                                    sowing, irrigation, and harvesting with pinpoint accuracy. Get alert notifications
+                                    for extreme weather conditions directly tailored to your city.</span></p>
+                            <ul class="list-unstyled mb-4 fs-5">
+                                <li class="mb-3"><i class="fas fa-check-circle text-success me-3 fs-4 align-middle"></i>
+                                    <span class="align-middle"><span data-i18n="realtime_dynamic_upd_88092">Real-time
+                                            dynamic updates</span></span>
+                                </li>
+                                <li class="mb-3"><i class="fas fa-check-circle text-success me-3 fs-4 align-middle"></i>
+                                    <span class="align-middle"><span data-i18n="rainfall__humidity_t_bf056">Rainfall
+                                            &amp; humidity tracking</span></span>
+                                </li>
+                                <li class="mb-3"><i class="fas fa-check-circle text-success me-3 fs-4 align-middle"></i>
+                                    <span class="align-middle"><span data-i18n="wind_speeds_monitori_d0d54">Wind speeds
+                                            monitoring</span></span>
+                                </li>
+                            </ul>
+                            <a href="/dashboard"
+                                class="btn btn-outline-primary-custom rounded-pill px-4 py-2 mt-2"><span
+                                    data-i18n="view_full_forecast__d607a">View Full Forecast →</span></a>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="card weather-widget border-0 shadow-lg rounded-4 overflow-hidden">
+                                <div class="card-body p-5 text-white position-relative z-index-1 text-center">
+                                    <h5 class="fw-bold mb-1 text-white fs-4"><i
+                                            class="fas fa-map-marker-alt text-danger me-2"></i> <span
+                                            id="weatherLocationName">Detecting location...</span></h5>
+                                    <p class="text-white-50 mb-3" id="currentDate"><span
+                                            data-i18n="loading_date_f02ff">Loading date...</span></p>
+
+                                    <!-- City Search Bar -->
+                                    <div class="d-flex align-items-center mb-3 px-2" style="gap:8px;">
+                                        <div class="input-group" style="background:rgba(255,255,255,0.15); border-radius:50px; overflow:hidden;">
+                                            <span class="input-group-text border-0 bg-transparent text-white ps-3">
+                                                <i class="fas fa-search opacity-75"></i>
+                                            </span>
+                                            <input type="text" id="weatherCitySearch"
+                                                class="form-control border-0 bg-transparent text-white shadow-none py-2"
+                                                placeholder="Search city..."
+                                                style="color:white !important;"
+                                                onkeydown="if(event.key==='Enter') searchWeatherCity()">
+                                            <button class="btn border-0 text-white fw-bold px-3"
+                                                style="background:rgba(255,255,255,0.2); border-radius:0 50px 50px 0;"
+                                                onclick="searchWeatherCity()">Go</button>
+                                        </div>
+                                    </div>
+
+                                    <div id="homeWeatherBox" class="py-3">
+                                        <div class="spinner-border text-light my-4" style="width: 3rem; height: 3rem;"
+                                            role="status"></div>
+                                    </div>
+                                </div>
+                                <div class="weather-glass-overlay"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Market Panel -->
+                <div class="tab-pane fade" id="market-panel" role="tabpanel">
+                    <div
+                        class="row align-items-center bg-white rounded-4 shadow-sm p-4 p-md-5 border border-light mx-1">
+                        <div class="col-lg-5 mb-4 mb-lg-0 order-lg-2 ps-lg-5">
+                            <span
+                                class="badge bg-light text-warning text-dark mb-3 px-3 py-2 rounded-pill fw-bold border border-warning border-opacity-50"><span
+                                    data-i18n="market_rates_0f8fe">Market Rates</span></span>
+                            <h3 class="fw-bold mb-3 display-6"><span data-i18n="verify_prices_before_1cf87">Verify
+                                    Prices Before You Sell</span></h3>
+                            <p class="text-muted mb-4 fs-5"><span data-i18n="empower_yourself_wit_9be94">Empower
+                                    yourself with Live Mandi prices. Never sell your crops under value by checking
+                                    current market rates across different cities.</span></p>
+                            <a href="/market" class="btn btn-accent rounded-pill px-4 py-2 mt-2 shadow-sm fw-bold"><span
+                                    data-i18n="explore_market_trend_2c8bc">Explore Market Trends →</span></a>
+                        </div>
+                        <div class="col-lg-7 order-lg-1">
+                            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                                <div
+                                    class="card-header bg-primary-green text-white fw-bold py-3 d-flex justify-content-between align-items-center">
+                                    <span class="fs-5"><i class="fas fa-chart-line me-2"></i> <span
+                                            data-i18n="top_commodity_rates__634b4">Top Commodity Rates
+                                            Today</span></span>
+                                    <span class="badge bg-white text-primary-green rounded-pill px-3 py-2"><span
+                                            data-i18n="live_updates_12c33">Live Updates</span></span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle mb-0 fs-6 fs-md-5">
+                                            <thead class="table-light text-muted">
+                                                <tr>
+                                                    <th class="ps-4 py-3 fw-semibold"><span
+                                                            data-i18n="commodity_02d27">Commodity</span></th>
+                                                    <th class="py-3 fw-semibold"><span
+                                                            data-i18n="location_ce5bf">Location</span></th>
+                                                    <th class="text-end pe-4 py-3 fw-semibold"><span
+                                                            data-i18n="price_q_452e6">Price (₹/Q)</span></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="homeMarketTable">
+                                                <tr>
+                                                    <td colspan="3" class="text-center py-5">
+                                                        <div class="spinner-border text-success" role="status"></div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shop Panel -->
+                <div class="tab-pane fade" id="shop-panel" role="tabpanel">
+                    <div
+                        class="row align-items-center bg-white rounded-4 shadow-sm p-4 p-md-5 border border-light mx-1 text-center text-lg-start">
+                        <div class="col-lg-6 mb-4 mb-lg-0 pe-lg-5">
+                            <span
+                                class="badge bg-light text-primary mb-3 px-3 py-2 rounded-pill fw-bold border border-primary border-opacity-25"><span
+                                    data-i18n="ecommerce_a9f7e">E-Commerce</span></span>
+                            <h3 class="fw-bold mb-3 display-6"><span data-i18n="shop_agricultural_su_0e17b">Shop
+                                    Agricultural Supplies</span></h3>
+                            <p class="text-muted mb-4 fs-5"><span data-i18n="connect_directly_wit_3d7ef">Connect
+                                    directly with trusted local shopkeepers and massive vendors for seeds, authentic
+                                    fertilizers, and modern farming equipment.</span></p>
+                            <div class="d-flex flex-wrap gap-2 mb-4 justify-content-center justify-content-lg-start">
+                                <span class="badge bg-light text-dark px-3 py-2 border"><i
+                                        class="fas fa-seedling text-success me-1"></i> <span
+                                        data-i18n="seeds_0739f">Seeds</span></span>
+                                <span class="badge bg-light text-dark px-3 py-2 border"><i
+                                        class="fas fa-flask text-primary me-1"></i> <span
+                                        data-i18n="fertilizers_754d5">Fertilizers</span></span>
+                                <span class="badge bg-light text-dark px-3 py-2 border"><i
+                                        class="fas fa-tractor text-warning me-1"></i> <span
+                                        data-i18n="equipment_9ccda">Equipment</span></span>
+                            </div>
+                            <a href="/shops" class="btn btn-outline-primary-custom rounded-pill px-4 py-2 mt-2"><span
+                                    data-i18n="browse_catalog__2d0e8">Browse Catalog →</span></a>
+                        </div>
+                        <div class="col-lg-6">
+                            <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?q=80&amp;w=800&amp;auto=format&amp;fit=crop"
+                                class="img-fluid rounded-4 shadow-lg w-100" alt="Agri Shop">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Community Panel -->
+                <div class="tab-pane fade" id="comm-panel" role="tabpanel">
+                    <div
+                        class="row align-items-center bg-white rounded-4 shadow-sm p-4 p-md-5 border border-light mx-1">
+                        <div class="col-lg-6 mb-4 mb-lg-0 order-lg-2 ps-lg-5 text-center text-lg-start">
+                            <span
+                                class="badge bg-light text-danger mb-3 px-3 py-2 rounded-pill fw-bold border border-danger border-opacity-25"><span
+                                    data-i18n="support_system_2c1a7">Support System</span></span>
+                            <h3 class="fw-bold mb-3 display-6"><span data-i18n="expert_community_hel_d1ce7">Expert
+                                    Community Help</span></h3>
+                            <p class="text-muted mb-4 fs-5"><span data-i18n="got_crop_disease_or__aa31b">Got crop
+                                    disease or pest attacks? Raise requests to local agricultural officers and community
+                                    experts. Get actionable solutions FAST.</span></p>
+                            <a href="/register"
+                                class="btn btn-accent rounded-pill px-4 py-2 mt-2 shadow-sm fw-bold"><span
+                                    data-i18n="join_community_today_99e72">Join Community Today →</span></a>
+                        </div>
+                        <div class="col-lg-6 order-lg-1">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <img src="https://images.unsplash.com/photo-1599388107955-442b31f7cf60?q=80&amp;w=400&amp;auto=format&amp;fit=crop"
+                                        class="img-fluid rounded-4 shadow-sm w-100 h-100 object-fit-cover" alt="Farmer">
+                                </div>
+                                <div class="col-6">
+                                    <img src="https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&amp;w=400&amp;auto=format&amp;fit=crop"
+                                        class="img-fluid rounded-4 shadow-sm w-100 h-100 object-fit-cover"
+                                        alt="Officer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Features Section -->
+    <section class="py-5 bg-white mb-0">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h3 class="fw-bolder display-6"><span data-i18n="why_choose_59b07">Why Choose</span> <span
+                        class="text-primary-green"><span data-i18n="agriassists_f8dc2">Agri-Assists?</span></span></h3>
+            </div>
+            <div class="row text-center mt-4">
+                <div class="col-md-4 mb-4">
+                    <div class="card feature-card h-100 p-4 pb-5 border border-light bg-light-soft">
+                        <div class="icon-box mb-4 mt-2"><i class="fas fa-language"></i></div>
+                        <h4 class="fw-bold mb-3"><span data-i18n="multilingual_platfor_de0f7">Multilingual
+                                Platform</span></h4>
+                        <p class="text-muted fs-6"><span data-i18n="available_in_english_ce996">Available in English,
+                                Hindi, and Marathi ensuring no language barriers for anyone.</span></p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card feature-card h-100 p-4 pb-5 border border-light bg-light-soft">
+                        <div class="icon-box mb-4 mt-2"><i class="fas fa-mobile-alt"></i></div>
+                        <h4 class="fw-bold mb-3"><span data-i18n="mobile_optimized_e6eb3">Mobile Optimized</span></h4>
+                        <p class="text-muted fs-6"><span data-i18n="use_it_seamlessly_on_25ba7">Use it seamlessly on
+                                mobile, tablet, or desktop with our universally responsive design.</span></p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card feature-card h-100 p-4 pb-5 border border-light bg-light-soft">
+                        <div class="icon-box mb-4 mt-2"><i class="fas fa-leaf"></i></div>
+                        <h4 class="fw-bold mb-3"><span data-i18n="sustainable_practice_50300">Sustainable
+                                Practices</span></h4>
+                        <p class="text-muted fs-6"><span data-i18n="learn_about_modern_e_6494e">Learn about modern
+                                eco-friendly and high-yield farming methods directly from experts.</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section class="py-5 bg-light-soft" id="contact">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="display-6 fw-bolder"><span data-i18n="contact_us_title">Get In Touch</span></h2>
+                <p class="text-muted fs-5 w-75 mx-auto"><span data-i18n="contact_us_subtitle">Have any questions or need
+                        technical support? We are here to help. Contact our admin team directly.</span></p>
+            </div>
+            <div class="row g-5 align-items-stretch text-start">
+                <!-- Contact Details -->
+                <div class="col-lg-5">
+                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden h-100"
+                        style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green));">
+                        <div class="card-body p-4 p-md-5 text-white position-relative z-index-1 text-start">
+                            <i class="fas fa-headset fa-5x position-absolute opacity-10"
+                                style="right: -10px; bottom: -10px; color: white;"></i>
+                            <h4 class="fw-bold mb-4 text-white"><span data-i18n="admin_contact_info">Admin Contact
+                                    Info</span></h4>
+                            <p class="text-white-50 mb-5"><span data-i18n="admin_contact_desc">We typically reply within
+                                    24 hours. For urgent matters, please call us directly via the phone number
+                                    provided.</span></p>
+
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="icon-box bg-white bg-opacity-25 text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                                    style="width: 50px; height: 50px;">
+                                    <i class="fas fa-map-marker-alt fs-5"></i>
+                                </div>
+                                <div class="ms-4">
+                                    <h6 class="fw-bold text-white mb-1"><span
+                                            data-i18n="headquarters">Headquarters</span></h6>
+                                    <p class="text-white-50 mb-0" id="adminSettingAddress">Agri-Assists Tower, Pune, Maharashtra 411001</p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="icon-box bg-white bg-opacity-25 text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                                    style="width: 50px; height: 50px;">
+                                    <i class="fas fa-envelope fs-5"></i>
+                                </div>
+                                <div class="ms-4">
+                                    <h6 class="fw-bold text-white mb-1"><span data-i18n="email_support">Email
+                                            Support</span></h6>
+                                    <p class="text-white-50 mb-0"><a href="mailto:admin@agri-assists.com" id="adminSettingEmail"
+                                            class="text-white text-decoration-none">admin@agri-assists.com</a></p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box bg-white bg-opacity-25 text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                                    style="width: 50px; height: 50px;">
+                                    <i class="fas fa-phone-alt fs-5"></i>
+                                </div>
+                                <div class="ms-4">
+                                    <h6 class="fw-bold text-white mb-1"><span data-i18n="phone_number">Phone
+                                            Number</span></h6>
+                                    <p class="text-white-50 mb-0"><a href="tel:+919876543210" id="adminSettingPhone"
+                                            class="text-white text-decoration-none">+91 98765 43210</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Contact Form -->
+                <div class="col-lg-7">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 h-100">
+                        <h4 class="fw-bold mb-4"><span data-i18n="send_message">Send us a Message</span></h4>
+                        <form id="contactForm" onsubmit="submitContact(event)">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-dark"><span data-i18n="full_name">Full
+                                            Name</span></label>
+                                    <input type="text" id="contactName" class="form-control py-2 bg-light border-light shadow-none"
+                                        required placeholder="Enter Name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-dark"><span data-i18n="email_addr">Email
+                                            Address</span></label>
+                                    <input type="email" id="contactEmail" class="form-control py-2 bg-light border-light shadow-none"
+                                        required placeholder="Enter E-m@il">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold text-dark"><span
+                                        data-i18n="subject">Subject</span></label>
+                                <input type="text" id="contactSubject" class="form-control py-2 bg-light border-light shadow-none" required
+                                    placeholder="How can we help?">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-dark"><span data-i18n="message">Your
+                                        Message</span></label>
+                                <textarea id="contactMessageInput" class="form-control py-2 bg-light border-light shadow-none" rows="4" required
+                                    placeholder="Write your message here..."></textarea>
+                            </div>
+                            <button type="submit" id="contactSubmitBtn"
+                                class="btn btn-accent rounded-pill px-5 py-3 fw-bold shadow-sm w-100 w-md-auto"><i
+                                    class="fas fa-paper-plane me-2"></i> <span data-i18n="send_now">Send
+                                    Message</span></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Banner CTA -->
+    <section class="py-5 bg-primary-green position-relative overflow-hidden mb-0">
+        <div class="position-absolute top-0 start-0 w-100 h-100"
+            style="background: url('https://images.unsplash.com/photo-1495107334309-fcf20504a5ab?q=80&amp;w=2000&amp;auto=format&amp;fit=crop') center/cover; opacity: 0.15;">
+        </div>
+        <div class="container position-relative z-index-1 text-center py-5">
+            <h2 class="display-5 fw-bolder text-white mb-4"><span data-i18n="ready_to_maximize_yo_8db7d">Ready to
+                    Maximize Your Harvest?</span></h2>
+            <p class="lead text-white fw-light mb-5 w-75 mx-auto"><span data-i18n="join_thousands_of_pr_2f7be">Join
+                    thousands of progressive farmers already making smart, data-driven agricultural decisions
+                    today.</span></p>
+            <a href="/register" class="btn btn-accent btn-lg px-5 py-3 rounded-pill fw-bold shadow-lg fs-5"><span
+                    data-i18n="create_your_free_acc_3c727">Create Your Free Account Now</span></a>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-light py-5 text-center mt-auto">
+        <div class="container pt-3">
+            <div class="row align-items-center">
+                <div class="col-md-4 text-md-start mb-3 mb-md-0">
+                    <a class="navbar-brand fw-bold fs-3 text-white text-decoration-none" href="/">
+                        <i class="fas fa-leaf text-accent me-2"></i> <span
+                            data-i18n="agriassists_eab25">Agri-Assists</span>
+                    </a>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <p class="mb-0 text-white-50"><span data-i18n="_2026_agriassists_al_2f1e2">© 2026 Agri-Assists. All
+                            rights reserved.</span></p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="#" class="text-white-50 me-3 fs-4"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-white-50 me-3 fs-4"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-white-50 fs-4"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+
+            // Set Today's Date
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateEl = document.getElementById('currentDate');
+            if (dateEl) dateEl.innerText = new Date().toLocaleDateString('en-US', options);
+
+            // Load Weather for Home Page (Geolocation first, fallback to Nanded)
+            const weatherBox = document.getElementById('homeWeatherBox');
+            const locationNameEl = document.getElementById('weatherLocationName');
+
+            const renderWeather = (w) => {
+                // Update location name from API response
+                if (locationNameEl) {
+                    locationNameEl.textContent = w.name + (w.sys && w.sys.country ? ', ' + w.sys.country : '');
+                }
+
+                let icon = 'fa-cloud-sun';
+                const cond = w.weather[0].main.toLowerCase();
+                if (cond.includes('rain') || cond.includes('drizzle')) icon = 'fa-cloud-rain';
+                else if (cond.includes('clear')) icon = 'fa-sun';
+                else if (cond.includes('snow')) icon = 'fa-snowflake';
+                else if (cond.includes('thunder')) icon = 'fa-bolt';
+                else if (cond.includes('cloud')) icon = 'fa-cloud';
+                else if (cond.includes('fog') || cond.includes('mist') || cond.includes('haze')) icon = 'fa-smog';
+
+                weatherBox.innerHTML = `
+                    <div class="display-1 fw-bold text-white text-shadow mb-2">${Math.round(w.main.temp)}°C</div>
+                    <div class="fs-4 text-white fw-semibold mb-4"><i class="fas ${icon} text-warning me-2"></i> ${w.weather[0].main}</div>
+                    <div class="row g-0 px-4 mt-3">
+                        <div class="col-6 border-end border-light border-opacity-25 py-2">
+                            <i class="fas fa-tint text-info fs-4 mb-2"></i>
+                            <div class="fs-5 fw-bold">${w.main.humidity}%</div>
+                            <small class="text-white-50">Humidity</small>
+                        </div>
+                        <div class="col-6 py-2">
+                            <i class="fas fa-wind text-light fs-4 mb-2"></i>
+                            <div class="fs-5 fw-bold">${w.wind.speed} m/s</div>
+                            <small class="text-white-50">Wind</small>
+                        </div>
+                    </div>
+                `;
+            };
+
+            const loadWeatherByLatLon = async (lat, lon) => {
+                const weatherRes = await apiCall(`/weather?lat=${lat}&lon=${lon}`, 'GET');
+                if (weatherRes && weatherRes.success) {
+                    renderWeather(weatherRes.weather);
+                } else {
+                    weatherBox.innerHTML = `<p class="text-warning"><i class="fas fa-exclamation-triangle me-2"></i> ${translations['js_err_weath1'] || 'Could not load weather data.'}</p>`;
+                }
+            };
+
+            const loadWeatherByCity = async (city) => {
+                const weatherRes = await apiCall(`/weather?city=${encodeURIComponent(city)}`, 'GET');
+                if (weatherRes && weatherRes.success) {
+                    renderWeather(weatherRes.weather);
+                } else {
+                    weatherBox.innerHTML = `<p class="text-warning"><i class="fas fa-exclamation-triangle me-2"></i> ${translations['js_err_weath1'] || 'Could not load weather data.'}</p>`;
+                }
+            };
+
+            if (weatherBox) {
+                try {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            async (position) => {
+                                try {
+                                    await loadWeatherByLatLon(position.coords.latitude, position.coords.longitude);
+                                } catch (e) {
+                                    await loadWeatherByCity('Nanded');
+                                }
+                            },
+                            async () => {
+                                // User denied geolocation – fall back to Nanded
+                                try { await loadWeatherByCity('Nanded'); } catch (e) {
+                                    weatherBox.innerHTML = `<p class="text-warning"><i class="fas fa-exclamation-triangle me-2"></i> ${translations['js_err_weath2'] || 'Error fetching weather.'}</p>`;
+                                }
+                            },
+                            { timeout: 6000 }
+                        );
+                    } else {
+                        await loadWeatherByCity('Nanded');
+                    }
+                } catch (err) {
+                    weatherBox.innerHTML = `<p class="text-warning"><i class="fas fa-exclamation-triangle me-2"></i> ${translations['js_err_weath2'] || 'Error fetching weather.'}</p>`;
+                }
+            }
+
+            // Load some market prices
+            const tableBody = document.getElementById('homeMarketTable');
+            if (tableBody) {
+                try {
+                    const marketRes = await apiCall('/market/prices', 'GET');
+                    if (marketRes && marketRes.success && marketRes.prices.length > 0) {
+                        let html = '';
+                        // Just show top 5 unique crops
+                        marketRes.prices.slice(0, 5).forEach(p => {
+                            let icon = 'fa-seedling';
+                            if (p.crop.toLowerCase().includes('wheat')) icon = 'fa-wheat';
+                            if (p.crop.toLowerCase().includes('apple')) icon = 'fa-apple-alt';
+                            if (p.crop.toLowerCase().includes('rice')) icon = 'fa-leaf';
+
+                            html += `
+                                <tr>
+                                    <td class="ps-4 fw-bold"><i class="fas ${icon} text-primary-green me-3 fs-5 align-middle"></i> ${p.crop}</td>
+                                    <td>${p.city}</td>
+                                    <td class="text-end pe-4 fw-bolder text-accent fs-5">₹${p.price}</td>
+                                </tr>
+                            `;
+                        });
+                        tableBody.innerHTML = html;
+                    } else {
+                        tableBody.innerHTML = `<tr><td colspan=\"3\" class=\"text-center py-5 text-muted\">${translations['js_no_prices'] || 'No prices available at the moment'}</td></tr>`;
+                    }
+                } catch (err) {
+                    tableBody.innerHTML = `<tr><td colspan=\"3\" class=\"text-center py-5 text-danger\">${translations['js_err_prices'] || 'Failed to fetch market rates.'}</td></tr>`;
+                }
+            }
+            
+            // Fetch public settings for Admin contact info
+            try {
+                const settingsRes = await fetch('/api/public-settings');
+                const data = await settingsRes.json();
+                if (data && data.success && data.settings) {
+                    const s = data.settings;
+                    
+                    const elAddress = document.getElementById('adminSettingAddress');
+                    const elEmail = document.getElementById('adminSettingEmail');
+                    const elPhone = document.getElementById('adminSettingPhone');
+                    
+                    if(elAddress && s.address) elAddress.innerText = s.address;
+                    if(elEmail && s.contactEmail) {
+                        elEmail.innerText = s.contactEmail;
+                        elEmail.href = `mailto:${s.contactEmail}`;
+                    }
+                    if(elPhone && s.contactPhone) {
+                        elPhone.innerText = s.contactPhone;
+                        elPhone.href = `tel:${s.contactPhone.replace(/\s/g, '')}`;
+                    }
+                }
+            } catch(e) {
+                console.error("Error fetching admin settings:", e);
+            }
+        });
+
+        async function submitContact(e) {
+            e.preventDefault();
+            const btn = document.getElementById('contactSubmitBtn');
+            btn.disabled = true;
+            btn.innerText = 'Sending...';
+
+            const payload = {
+                name: document.getElementById('contactName').value,
+                email: document.getElementById('contactEmail').value,
+                subject: document.getElementById('contactSubject').value,
+                message: document.getElementById('contactMessageInput').value
+            };
+
+            try {
+                const res = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if(data.success) {
+                    alert('Message sent successfully! Our admin will contact you soon.');
+                    document.getElementById('contactForm').reset();
+                } else {
+                    alert(data.message || 'Error sending message');
+                }
+            } catch (err) {
+                alert('Server error sending message');
+            }
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane me-2"></i> <span data-i18n="send_now">Send Message</span>';
+            // Re-apply translations for the button if needed, but innerHTML override kills the span translation binding temporarily. We can just use hardcoded English for now since it resets.
+        }
+
+        async function searchWeatherCity() {
+            const input = document.getElementById('weatherCitySearch');
+            const city = input ? input.value.trim() : '';
+            if (!city) return;
+
+            const weatherBox = document.getElementById('homeWeatherBox');
+            const locationNameEl = document.getElementById('weatherLocationName');
+
+            // Show spinner while loading
+            weatherBox.innerHTML = `<div class="spinner-border text-light my-4" style="width:2.5rem;height:2.5rem;" role="status"></div>`;
+            if (locationNameEl) locationNameEl.textContent = city + '...';
+
+            try {
+                const weatherRes = await apiCall(`/weather?city=${encodeURIComponent(city)}`, 'GET');
+                if (weatherRes && weatherRes.success) {
+                    const w = weatherRes.weather;
+                    if (locationNameEl) {
+                        locationNameEl.textContent = w.name + (w.sys && w.sys.country ? ', ' + w.sys.country : '');
+                    }
+
+                    let icon = 'fa-cloud-sun';
+                    const cond = w.weather[0].main.toLowerCase();
+                    if (cond.includes('rain') || cond.includes('drizzle')) icon = 'fa-cloud-rain';
+                    else if (cond.includes('clear')) icon = 'fa-sun';
+                    else if (cond.includes('snow')) icon = 'fa-snowflake';
+                    else if (cond.includes('thunder')) icon = 'fa-bolt';
+                    else if (cond.includes('cloud')) icon = 'fa-cloud';
+                    else if (cond.includes('fog') || cond.includes('mist') || cond.includes('haze')) icon = 'fa-smog';
+
+                    weatherBox.innerHTML = `
+                        <div class="display-1 fw-bold text-white text-shadow mb-2">${Math.round(w.main.temp)}°C</div>
+                        <div class="fs-4 text-white fw-semibold mb-4"><i class="fas ${icon} text-warning me-2"></i> ${w.weather[0].main}</div>
+                        <div class="row g-0 px-4 mt-3">
+                            <div class="col-6 border-end border-light border-opacity-25 py-2">
+                                <i class="fas fa-tint text-info fs-4 mb-2"></i>
+                                <div class="fs-5 fw-bold">${w.main.humidity}%</div>
+                                <small class="text-white-50">Humidity</small>
+                            </div>
+                            <div class="col-6 py-2">
+                                <i class="fas fa-wind text-light fs-4 mb-2"></i>
+                                <div class="fs-5 fw-bold">${w.wind.speed} m/s</div>
+                                <small class="text-white-50">Wind</small>
+                            </div>
+                        </div>
+                    `;
+
+                    // Clear the input after successful search
+                    if (input) input.value = '';
+                } else {
+                    weatherBox.innerHTML = `<p class="text-warning"><i class="fas fa-exclamation-triangle me-2"></i> City not found. Please try again.</p>`;
+                    if (locationNameEl) locationNameEl.textContent = 'Not Found';
+                }
+            } catch (err) {
+                weatherBox.innerHTML = `<p class="text-warning"><i class="fas fa-exclamation-triangle me-2"></i> Error fetching weather. Try again.</p>`;
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Agri-Assists</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="d-flex flex-column min-vh-100"
+    style="background: linear-gradient(rgba(244, 252, 245, 0.4), rgba(244, 252, 245, 0.6)), url('https://images.unsplash.com/photo-1559884749-2810fb5e8ed5?q=80&amp;w=2000&amp;auto=format&amp;fit=crop') center/cover fixed;">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary-green sticky-top shadow-sm py-2 bg-opacity-75"
+        style="backdrop-filter: blur(10px);">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold fs-5 text-white" href="/dashboard"><i class="fas fa-arrow-left me-2"></i>
+                <span data-i18n="back_to_dashboard_3649f">Back to Dashboard</span></a>
+        </div>
+    </nav>
+
+    <div class="container py-5 flex-grow-1">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate-fade-in-up hover-lift">
+                    <div class="bg-primary-green text-white p-5 text-center position-relative"
+                        style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green));">
+
+                        <div class="icon-box mx-auto mb-3 border border-4 border-white bg-white text-primary-green shadow"
+                            style="width: 100px; height: 100px; font-size: 3rem; border-radius: 50%;">
+                            <i class="fas fa-user"></i>
+                        </div>
+
+                        <h2 class="fw-bolder mb-1 fs-1" id="profileName"><span
+                                data-i18n="loading_8524d">Loading...</span></h2>
+                        <span
+                            class="badge bg-white text-primary-green px-3 py-2 rounded-pill shadow-sm fw-bold text-uppercase tracking-wider mt-2"
+                            id="profileRole"><i class="fas fa-spinner fa-spin"></i></span>
+                    </div>
+                    <div class="card-footer bg-white border-0 pb-4 px-4 px-md-5 text-center" id="profileActions"
+                        style="display: none;">
+                        <button class="btn btn-outline-primary-custom rounded-pill px-4 fw-bold shadow-sm me-2"
+                            id="editProfileBtn"><i class="fas fa-edit me-2"></i><span
+                                data-i18n="edit_profile_1860f">Edit Profile</span></button>
+                    </div>
+
+                    <div class="card-body p-4 p-md-5 bg-white" id="profileDetails">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-success" role="status"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = getToken();
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const res = await apiCall('/auth/profile', 'GET');
+                const detailsDiv = document.getElementById('profileDetails');
+
+                if (res.success) {
+                    const user = res.user;
+                    document.getElementById('profileActions').style.display = 'block';
+                    document.getElementById('profileName').textContent = user.name;
+                    document.getElementById('profileRole').innerHTML = user.role === 'farmer' ? '<i class="fas fa-seedling me-1"></i> Farmer' : '<i class="fas fa-store me-1"></i> Shopkeeper';
+
+                    let specificFields = '';
+                    if (user.role === 'farmer') {
+                        specificFields = `
+                            <div class="col-md-6 mb-4">
+                                <div class="p-3 bg-light rounded-3 border h-100">
+                                    <small class="text-muted text-uppercase fw-bold d-block mb-1 fs-7">State</small>
+                                    <input type="text" id="editState" class="form-control form-control-sm bg-transparent border-0 p-0 fs-5 fw-semibold text-dark profile-input" value="${user.state || ''}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="p-3 bg-light rounded-3 border h-100">
+                                    <small class="text-muted text-uppercase fw-bold d-block mb-1 fs-7">Farm Size</small>
+                                    <input type="text" id="editFarmSize" class="form-control form-control-sm bg-transparent border-0 p-0 fs-5 fw-semibold text-dark profile-input" value="${user.farmSize || ''}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4">
+                                <div class="p-3 bg-light rounded-3 border">
+                                    <small class="text-muted text-uppercase fw-bold d-block mb-1 fs-7"><i class="fas fa-leaf text-success me-1"></i> Main Crop</small>
+                                    <input type="text" id="editMainCrop" class="form-control form-control-sm bg-transparent border-0 p-0 fs-5 fw-semibold text-dark profile-input" value="${user.mainCrop || ''}" readonly>
+                                </div>
+                            </div>
+                        `;
+                    } else if (user.role === 'shopkeeper') {
+                        specificFields = `
+                            <div class="col-12 mb-4">
+                                <div class="p-3 bg-light rounded-3 border">
+                                    <small class="text-muted text-uppercase fw-bold d-block mb-1 fs-7"><i class="fas fa-store text-primary me-1"></i> Shop Name</small>
+                                    <input type="text" id="editShopName" class="form-control form-control-sm bg-transparent border-0 p-0 fs-4 fw-bolder text-primary-green profile-input" value="${user.shopName || ''}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4">
+                                <div class="p-3 bg-light rounded-3 border">
+                                    <small class="text-muted text-uppercase fw-bold d-block mb-1 fs-7"><i class="fas fa-map-pin text-danger me-1"></i> Shop Address</small>
+                                    <input type="text" id="editShopAddress" class="form-control form-control-sm bg-transparent border-0 p-0 fs-5 fw-semibold text-dark profile-input" value="${user.shopAddress || ''}" readonly>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    detailsDiv.innerHTML = `
+                    <form id="profileForm">
+                        <h5 class="fw-bolder mb-4 text-dark border-bottom pb-3 d-flex justify-content-between align-items-center">
+                            <i class="fas fa-address-card text-primary-green me-2"></i> Contact Information
+                        </h5>
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3 border">
+                                    <div class="icon-box me-3 bg-white shadow-sm text-primary-green" style="width: 40px; height: 40px; font-size: 1.2rem;">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <small class="text-muted text-uppercase fw-bold d-block fs-7">Email Address</small>
+                                        <input type="email" class="form-control form-control-sm bg-transparent border-0 p-0 fs-5 fw-semibold text-dark profile-input" value="${user.email}" readonly disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3 border h-100">
+                                    <div class="icon-box me-3 bg-white shadow-sm text-info" style="width: 40px; height: 40px; font-size: 1.2rem;">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <small class="text-muted text-uppercase fw-bold d-block fs-7">Phone</small>
+                                        <input type="text" id="editPhone" class="form-control form-control-sm bg-transparent border-0 p-0 fs-6 fw-semibold text-dark profile-input" value="${user.phone}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3 border h-100">
+                                    <div class="icon-box me-3 bg-white shadow-sm text-danger" style="width: 40px; height: 40px; font-size: 1.2rem;">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <small class="text-muted text-uppercase fw-bold d-block fs-7">City</small>
+                                        <input type="text" id="editCity" class="form-control form-control-sm bg-transparent border-0 p-0 fs-6 fw-semibold text-dark profile-input" value="${user.city}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bolder mt-3 mb-4 text-dark border-bottom pb-3"><i class="fas fa-info-circle text-primary-green me-2"></i> Account Details</h5>
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <div class="p-3 bg-light rounded-3 border">
+                                    <small class="text-muted text-uppercase fw-bold d-block mb-1 fs-7"><i class="fas fa-user text-secondary me-1"></i> Full Name</small>
+                                    <input type="text" id="editName" class="form-control form-control-sm bg-transparent border-0 p-0 fs-5 fw-semibold text-dark profile-input" value="${user.name}" readonly>
+                                </div>
+                            </div>
+                            ${specificFields}
+                        </div>
+
+                        <div id="editActions" class="text-center mt-3" style="display: none;">
+                            <button type="button" class="btn btn-secondary rounded-pill px-4 me-2 shadow-sm" id="cancelEditBtn">Cancel</button>
+                            <button type="submit" class="btn btn-primary-custom rounded-pill px-4 shadow-sm" id="saveProfileBtn">Save Changes</button>
+                        </div>
+
+                        <div class="text-center mt-4" id="memberSince">
+                            <i class="fas fa-calendar-check me-1"></i> Member since ${new Date(user.createdAt).toLocaleDateString()}
+                        </div>
+                    </form>
+                    `;
+                } else {
+                    detailsDiv.innerHTML = '<div class="alert alert-danger shadow-sm rounded-3"><i class="fas fa-exclamation-triangle me-2"></i> Could not load profile details.</div>';
+                }
+
+                // Add event listeners for edit functionality
+                const editProfileBtn = document.getElementById('editProfileBtn');
+                const cancelEditBtn = document.getElementById('cancelEditBtn');
+                const profileForm = document.getElementById('profileForm');
+                const editActions = document.getElementById('editActions');
+                const profileActions = document.getElementById('profileActions');
+                const memberSince = document.getElementById('memberSince');
+                const inputs = document.querySelectorAll('.profile-input:not([disabled])');
+
+                if (editProfileBtn) {
+                    editProfileBtn.addEventListener('click', () => {
+                        inputs.forEach(input => {
+                            input.removeAttribute('readonly');
+                            input.classList.remove('bg-transparent', 'border-0', 'p-0');
+                            input.classList.add('bg-white', 'border', 'p-2', 'shadow-sm');
+                        });
+                        editActions.style.display = 'block';
+                        profileActions.style.display = 'none';
+                        memberSince.style.display = 'none';
+                        document.getElementById('editName').focus();
+                    });
+                }
+
+                if (cancelEditBtn) {
+                    cancelEditBtn.addEventListener('click', () => {
+                        inputs.forEach(input => {
+                            input.setAttribute('readonly', true);
+                            input.classList.add('bg-transparent', 'border-0', 'p-0');
+                            input.classList.remove('bg-white', 'border', 'p-2', 'shadow-sm');
+                        });
+                        editActions.style.display = 'none';
+                        profileActions.style.display = 'block';
+                        memberSince.style.display = 'block';
+                        // optionally reset values to original here
+                    });
+                }
+
+                if (profileForm) {
+                    profileForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const saveBtn = document.getElementById('saveProfileBtn');
+                        saveBtn.innerHTML = 'Saving...';
+                        saveBtn.disabled = true;
+
+                        const updatedData = {
+                            name: document.getElementById('editName')?.value,
+                            phone: document.getElementById('editPhone')?.value,
+                            city: document.getElementById('editCity')?.value,
+                        };
+
+                        if (res.user.role === 'farmer') {
+                            updatedData.state = document.getElementById('editState')?.value;
+                            updatedData.farmSize = document.getElementById('editFarmSize')?.value;
+                            updatedData.mainCrop = document.getElementById('editMainCrop')?.value;
+                        } else if (res.user.role === 'shopkeeper') {
+                            updatedData.shopName = document.getElementById('editShopName')?.value;
+                            updatedData.shopAddress = document.getElementById('editShopAddress')?.value;
+                        }
+
+                        try {
+                            const updateRes = await apiCall('/auth/profile', 'PUT', updatedData);
+                            if (updateRes.success) {
+                                // Update User object in localStorage logic could go here if needed
+                                const userObj = JSON.parse(localStorage.getItem('user'));
+                                if (userObj && updatedData.name) {
+                                    userObj.name = updatedData.name;
+                                    localStorage.setItem('user', JSON.stringify(userObj));
+                                }
+
+                                alert('Profile updated successfully!');
+                                window.location.reload();
+                            } else {
+                                alert(updateRes.message || 'Error updating profile');
+                                saveBtn.innerHTML = 'Save Changes';
+                                saveBtn.disabled = false;
+                            }
+                        } catch (err) {
+                            alert('An error occurred while updating the profile.');
+                            saveBtn.innerHTML = 'Save Changes';
+                            saveBtn.disabled = false;
+                        }
+                    });
+                }
+
+            } catch (e) {
+                document.getElementById('profileDetails').innerHTML = '<div class="alert alert-danger shadow-sm rounded-3"><i class="fas fa-exclamation-triangle me-2"></i> Error loading profile details.</div>';
+            }
+        });
+    </script>
+
+
+
+    <div class="lang-selector-floating"
+        style="position:fixed; bottom:20px; right:20px; z-index:9999; background:rgba(255,255,255,0.9); padding:5px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+        <select id="langSelect" class="form-select form-select-sm border-0 shadow-none fw-bold text-success">
+            <option value="en"><span data-i18n="english_en_935bb">English (EN)</span></option>
+            <option value="hi"><span data-i18n="_hi_270b2">हिंदी (HI)</span></option>
+            <option value="mr"><span data-i18n="_mr_b445f">मराठी (MR)</span></option>
+        </select>
+    </div>
+
+
+</body>
+
+</html>
